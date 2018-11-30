@@ -17,34 +17,32 @@ public class Main {
 	
 	/** Regista um novo utilizador no programa:
 	 * 
-	 * @param sessionState
 	 * @param email
 	 * 
 	 */
 	
-	private static void processRegista(boolean sessionState, String email) {
+	private static void processRegista(String email) {
 		
-		if(!sessionState) {
+		if(!isSessionActive()) {
 			
 			
 		}
 		
 		else
-			System.out.println("Comando inexistente.");	
+			unknownCommand();	
 		
 	}
 	
 	/** Permite a entrada ("login") dum utilizador no programa:
 	 * 
 	 * @param email
-	 * @param sessionState
 	 * @param in
 	 * 
 	 */
 	
-	private static void processEntrada(String email,boolean sessionState, Scanner in) {
+	private static void processEntrada(String email, Scanner in) {
 		
-		if(sessionState) {
+		if(isSessionActive()) {
 			
 			
 			
@@ -71,16 +69,16 @@ public class Main {
 	 * 
 	 */
 	
-	private static void processNova(Scanner in, boolean sessionState) {
+	private static void processNova(Scanner in) {
 		
-		if(sessionState) {
+		if(isSessionActive()) {
 			
 			
 		}
 		
 		else {
 			
-			System.out.println("Comando inexistente.");
+			unknownCommand();
 			
 		}
 		
@@ -97,19 +95,18 @@ public class Main {
 	 * 
 	 * @param email
 	 * @param date
-	 * @param sessionState
 	 * 
 	 */
 	
-	private static void processConsulta(String email, String date, boolean sessionState) {
+	private static void processConsulta(String email, String date) {
 		
-		if(sessionState) {
+		if(isSessionActive()) {
 			
 		}
 		
 		else {
 			
-			System.out.println("Comando inexistente.");
+			unknownCommand();
 			
 		}
 		
@@ -131,19 +128,23 @@ public class Main {
 	/** Retira uma dada deslocacao:
 	 * 
 	 * @param date
+	 * @param sessionState
 	 * 
 	 */
 	
-	private static void processRemove(String date) {
+	private static void processRemove(String date, boolean sessionState) {
 		
-		if(isSessionActive) {
+		if(sessionState) {
 			
 			
 			
 		}
 		
-		else
-		  unknownCommand();		
+		else {
+			
+			System.out.println("Comando inexistente.");
+			
+		}
 		
 	}
 			
