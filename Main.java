@@ -131,23 +131,19 @@ public class Main {
 	/** Retira uma dada deslocacao:
 	 * 
 	 * @param date
-	 * @param sessionState
 	 * 
 	 */
 	
-	private static void processRemove(String date, boolean sessionState) {
+	private static void processRemove(String date) {
 		
-		if(sessionState) {
+		if(isSessionActive) {
 			
 			
 			
 		}
 		
-		else {
-			
-			System.out.println("Comando inexistente.");
-			
-		}
+		else
+		  unknownCommand();		
 		
 	}
 			
