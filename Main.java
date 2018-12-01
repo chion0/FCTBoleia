@@ -18,11 +18,11 @@ public class Main {
 	/*Metodos Auxiliares*/
 
 	private static boolean isSessionActive() {
-		SessionState St1 = new SessionState()
+		SessionState St1 = new SessionState();
 				
 				boolean cond = false;
 		
-		if(St1.isSessionActive)
+		if(St1.isSessionActive())
 			cond = true;
 		
 		return cond;
@@ -51,7 +51,7 @@ public class Main {
 			System.out.println("ajuda - Mostra os comandos existentes");
 			System.out.println("termina - Termina a execucao do programa");
 			System.out.println("regista - Regista um novo utilizador no programa");
-			System.out.println("entrada - Permite a entrada (”login”) dum utilizador no programa");
+			System.out.println("entrada - Permite a entrada (ï¿½loginï¿½) dum utilizador no programa");
 		}
 		else {
 			System.out.println("ajuda - Mostra os comandos existentes");
@@ -67,13 +67,18 @@ public class Main {
 	/** Termina a execucao do programa */
 	
 	private static void processTermina() {
+		
 		if(isSessionActive()) {
+			
 			termina = true;
+			
 			System.out.println("Obrigado. Ate a proxima.");
+			
 		}
-		else {
-			unknownCommand();
-		}
+		
+		else 
+		  unknownCommand();
+		
 	}
 	
 	/** Regista um novo utilizador no programa:
@@ -82,15 +87,43 @@ public class Main {
 	 * 
 	 */
 	
-	private static void processRegista(String email) {
+	private static void processRegista(Scanner in, MainInteraction mi1, User u1) {
 		
 		if(!isSessionActive()) {
 			
+			u1.email = in.next();
 			
+			if(mi1.searchIndex(u1.email) >= 0) {
+				
+				System.out.println("Utilizador ja existente.");
+				System.out.println("Registo nao efetuado.");
+				
+			}
+				
+			else {
+					
+					String nome = in.next();
+					
+					System.out.println("nome (maximo 50 caracteres):" + nome);
+					
+					String password = in.next();
+					
+					if(password.length() >= 3 && password.length() <= 5 && mi1.countChar(password) > 0 && mi1.countNumbers(password) > 0) {
+						
+						System.out.println("Registo efetuado.");
+						
+					}
+					
+					else
+						System.out.println("Password incorreta.");
+					
+				}
+		
 		}
 		
 		else
-			unknownCommand();	
+			unknownCommand();
+					
 		
 	}
 	
@@ -101,13 +134,13 @@ public class Main {
 	 * 
 	 */
 	
-	private static void processEntrada(String email, Scanner in) {
+	private static void processEntrada(String email, String nome, String password, Scanner in, MainInteraction mi1) {
 		
-		if(isSessionActive()) {
+		if(!isSessionActive()) {
 			
+				
+			}
 			
-			
-		}
 		
 		else {
 			
@@ -201,11 +234,8 @@ public class Main {
 			
 		}
 		
-		else {
-			
-			System.out.println("Comando inexistente.");
-			
-		}
+		else 
+		  unknownCommand();	
 		
 	}
 	
@@ -215,7 +245,7 @@ public class Main {
 		return opt;
 	}
 	
-	private static void executeOption(String opt) {
+	private static void executeOption(String opt, MainInteraction mi1, Scanner in) {
 		if(!isSessionActive()) {
 			switch(opt) {
 			case AJUDA: processAjuda();
@@ -224,10 +254,10 @@ public class Main {
 			case TERMINA: processTermina();
 			break;
 			
-			case REGISTA: processRegista();
+			case REGISTA: processRegista(in,mi1);
 			break;
 			
-			case ENTRADA: processEntrada();
+		//	case ENTRADA: processEntrada();
 			break;
 			
 			default: unknownCommand();
@@ -242,19 +272,19 @@ public class Main {
 			case SAI: processSai();
 			break;
 			
-			case NOVA: processNova();
+		//	case NOVA: processNova();
 			break;
 			
 			case LISTA: processLista();
 			break;
 			
-			case BOLEIA: processBoleia();
+		//	case BOLEIA: processBoleia();
 			break;
 			
-			case CONSULTA: processConsulta();
+		//	case CONSULTA: processConsulta();
 			break;
 			
-			case REMOVE: processRemove();
+		//	case REMOVE: processRemove();
 			break;
 			
 			default: unknownCommand();
@@ -274,7 +304,7 @@ public class Main {
 		do {
 			opt = readOption(in);
 			
-			executeOption(in);
+	//		executeOption(opt);
 		}
 		while(!termina);
 	}

@@ -4,9 +4,17 @@ public class MainInteraction {
 	
 	public static final int GROWTH = 2, CAP_MAX = 5;
 	
+	public static final int CAP_MAX_NUMBERS = 10, CAP_MAX_ALPHABET = 26;
+	
 	/* Vetor de objetos */
 	
 	public User[] user;
+	
+	/* Vetores */
+	
+	public String []alphabet = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
+	
+	public int []numbers = {0,1,2,3,4,5,6,7,8,9};
 	
 	/* Variavel de instancia */
 	
@@ -18,6 +26,10 @@ public class MainInteraction {
 		
 		user = new User[CAP_MAX];
 		
+		alphabet = new String[CAP_MAX_ALPHABET];
+		
+		numbers = new int[CAP_MAX_NUMBERS];
+		
 		counterUser = 0;
 		
 	}
@@ -26,6 +38,75 @@ public class MainInteraction {
 	
 	public String getUserEmail(User u1) {
 		return u1.getEmail();
+	}
+	
+	public int searchIndex(String email) {
+		
+		int i = 0;
+		
+		int result = -1;
+		
+		boolean found = false;
+		
+		while(i < counterUser && !found) {
+			
+			if(user[i].getEmail().equals(email)) 
+				found = true;
+				
+			else i++;
+			
+		}
+		
+		if(found)
+			result = i;
+		
+		return result;
+		
+	}
+	
+	public int countChar(String password) {
+		
+		String temp = alphabet.toString();
+		
+		char[] alphabet = temp.toCharArray();
+		
+		int countChar = 0;
+		
+		int i; int j;
+		
+		for(i = 0; i < CAP_MAX_NUMBERS; i++) {
+			
+			for(j = 0; j < password.length(); j++) {
+				
+				if(password.charAt(j) == alphabet[i])
+					countChar++;
+
+			}
+		}
+		
+		return countChar;
+	}
+	
+	public int countNumbers(String password) {
+		
+		int countNumber = 0;
+		
+		int i; int j;
+		
+		for(i = 0; i < CAP_MAX_NUMBERS; i++) {
+			
+			for(j = 0; j < password.length(); j++) {
+				
+				Character c = password.charAt(j);
+				
+				if(Character.isDigit(c))
+					countNumber++;
+			}
+			
+		}
+		
+		return countNumber++;
+		
 	}
 	
 	public void resizeUser() {
@@ -42,6 +123,7 @@ public class MainInteraction {
 	public boolean isUserFull() {
 		return counterUser == user.length;
 	}
+	
 	
 	public void nova(String origin, String destiny, String date, int hours, int seatsFree, float duration, User u1) {
 		
