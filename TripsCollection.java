@@ -1,9 +1,19 @@
 public class TripsCollection {
 	
+	/* Constantes */
+	
 	public static final int CAP_MAX = 5, GROWTH = 2;
 	
+	/* Variavel de instancia */
+	
 	public int counterTrip;
-
+	
+	/** Construtor:
+	 * 
+	 * @param u1
+	 * 
+	 */
+	 
 	public TripsCollection(User u1) {
 		
 		counterTrip = 0;
@@ -13,10 +23,6 @@ public class TripsCollection {
 	public boolean isTripFull(User u1) {
 		return counterTrip == u1.trip.length;
 	}
-	
-	/*public boolean isUserFull() {
-		return counterUser == user.length;
-	}*/
 	
 	public void resizeTrip(User u1) {
 		
@@ -28,16 +34,5 @@ public class TripsCollection {
 		u1.trip = temp;
 		
 	}
-	
-	/*public void resizeUser() {
-		
-		User[] temp = new User[(user.length * GROWTH)];
-		
-		for(int i = 0; i <= user.length; i++)
-			temp[i] = user[i];
-		
-		user = temp;
-		
-	}*/
 	
 }

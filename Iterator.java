@@ -1,20 +1,38 @@
 public class Iterator {
 	
-private int counter, currentIndex;
+	/* Variaveis de instancia */
 	
-	public InfoTrip[] boleias;
+	private int counter, currentIndex;
+	
+	/* Vetores de objetos */
+	
+	public InfoTrip[] trip;
 	
 	public User[] users;
-  
-	public Iterator(InfoTrip[] presentes, int contador) {
+	
+	/** Construtor:
+	 *   
+	 * @param boleias
+	 * @param contador
+	 * 
+	 */
+	
+	public Iterator(InfoTrip[] trip, int contador) {
 		
 		this.counter = contador;
 		
 		currentIndex = 0;
 		
-		this.boleias = presentes;
+		this.trip = trip;
 		
 	}
+	
+	/** Construtor:
+	 * 
+	 * @param users
+	 * @param contador
+	 * 
+	 */
 	
 	public Iterator(User[] users, int contador) {
 		
@@ -31,7 +49,7 @@ private int counter, currentIndex;
 	}
 	
 	public InfoTrip nextTrip() {
-		return boleias[currentIndex++]; 
+		return trip[currentIndex++]; 
 	}
 	
 	public User nextUser() {
