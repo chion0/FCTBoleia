@@ -158,6 +158,7 @@ public class Main {
 					if(mi1.users[user].getPassword().equals(password)) {
 						loggedUser = user;
 						St1.sessionOn();
+						break;
 					}
 					else {
 						System.out.println("Password incorreta.");
