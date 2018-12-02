@@ -13,13 +13,14 @@ public class Main {
 	
 	private static boolean termina = false;
 	private static int loggedUser;
+	private static SessionState St1;
 	
 		/*Corpo da Classe*/
 	
 	/*Metodos Auxiliares*/
 
 	private static boolean isSessionActive() {
-		SessionState St1 = new SessionState();
+		St1 = new SessionState();
 				
 				boolean cond = false;
 		
@@ -156,6 +157,7 @@ public class Main {
 						
 					if(mi1.users[user].getPassword().equals(password)) {
 						loggedUser = user;
+						St1.sessionOn();
 					}
 					else {
 						System.out.println("Password incorreta.");
