@@ -53,7 +53,7 @@ public class Main {
 			System.out.println("ajuda - Mostra os comandos existentes");
 			System.out.println("termina - Termina a execucao do programa");
 			System.out.println("regista - Regista um novo utilizador no programa");
-			System.out.println("entrada - Permite a entrada (�login�) dum utilizador no programa");
+			System.out.println("entrada - Permite a entrada (login) dum utilizador no programa");
 		}
 		else {
 			System.out.println("ajuda - Mostra os comandos existentes");
@@ -70,7 +70,7 @@ public class Main {
 	
 	private static void processTermina() {
 		
-		if(isSessionActive()) {
+		if(!isSessionActive()) {
 			
 			termina = true;
 			
@@ -318,6 +318,8 @@ public class Main {
 	public static void main(String[] args) {
 	
 		Scanner in = new Scanner(System.in);
+		
+		St1 = new SessionState();
 		
 		MainInteraction mi1 = new MainInteraction();
 		
