@@ -8,7 +8,7 @@ public class MainInteraction {
 	
 	/* Vetor de objetos */
 	
-	public User[] user;
+	public User[] users;
 	
 	/* Vetores */
 	
@@ -24,7 +24,7 @@ public class MainInteraction {
 	
 	public MainInteraction() {
 		
-		user = new User[CAP_MAX];
+		users = new User[CAP_MAX];
 		
 		alphabet = new String[CAP_MAX_ALPHABET];
 		
@@ -36,9 +36,9 @@ public class MainInteraction {
 
 	/* Corpo da classe */
 	
-	public String getUserEmail(User u1) {
+	/*public String getUserEmail(User u1) {
 		return u1.getEmail();
-	}
+	}*/
 	
 	public int searchIndex(String email) {
 		
@@ -50,7 +50,7 @@ public class MainInteraction {
 		
 		while(i < counterUser && !found) {
 			
-			if(user[i].getEmail().equals(email)) 
+			if(users[i].getEmail().equals(email)) 
 				found = true;
 				
 			else i++;
@@ -111,21 +111,21 @@ public class MainInteraction {
 	
 	public void resizeUser() {
 		
-		User[] temp = new User[(user.length * GROWTH)];
+		User[] temp = new User[(users.length * GROWTH)];
 		
-		for(int i = 0; i <= user.length; i++)
-			temp[i] = user[i];
+		for(int i = 0; i <= users.length; i++)
+			temp[i] = users[i];
 		
-		user = temp;
+		users = temp;
 		
 	}
 	
 	public boolean isUserFull() {
-		return counterUser == user.length;
+		return counterUser == users.length;
 	}
 	
 	
-	public void nova(String origin, String destiny, String date, int hours, int seatsFree, float duration, User u1) {
+	/*public void nova(String origin, String destiny, String date, int hours, int seatsFree, float duration, User u1) {
 		
 		TripsCollection t1 = new TripsCollection(u1);
 		
@@ -134,13 +134,10 @@ public class MainInteraction {
 
 		u1.trip[t1.counterTrip++] = new InfoTrip(origin, destiny, date, hours, seatsFree, duration);
 		
-	}
+	}*/
 	
-	public User newUser(String email, String name, String password) {
+	public void newUser(String email, String name, String password) {
 		
-		User user = new User(email, name, password);
-		
-		return user;
-	}
-	
+		users[counterUser++] = new User(email, name, password);
+	}	
 }

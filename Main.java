@@ -12,7 +12,7 @@ public class Main {
 	/*Variaveis de Instancia*/
 	
 	private static boolean termina = false;
-	private static User user;
+	private static int loggedUser;
 	
 		/*Corpo da Classe*/
 	
@@ -29,9 +29,9 @@ public class Main {
 		return cond;
 	}
 	
-	private static void changePrompt() {
+	private static void prompt(MainInteraction mi1) {
 		if(isSessionActive())
-			System.out.print(+ prompt);
+			System.out.print(mi1.users[loggedUser].getEmail() + prompt);
 		
 		else
 			System.out.print(prompt);
@@ -111,7 +111,7 @@ public class Main {
 					
 					if(password.length() >= 3 && password.length() <= 5 && mi1.countChar(password) > 0 && mi1.countNumbers(password) > 0) {
 						
-						user = mi1.newUser(email, name, password);
+						mi1.newUser(email, name, password);
 						
 						System.out.println("Registo efetuado.");
 						
@@ -137,20 +137,37 @@ public class Main {
 	 * 
 	 */
 	
-	private static void processEntrada(String email, String nome, String password, Scanner in, MainInteraction mi1) {
+	private static void processEntrada(Scanner in,  MainInteraction mi1) {
 		
 		if(!isSessionActive()) {
+			String email = in.next();
+			in.nextLine();
 			
+			if(mi1.searchIndex(email) >= 0) {
+				int user = mi1.searchIndex(email);
 				
+				String password = in.next();
+				in.nextLine();
+				
+				int tries = 0;
+				
+				while(tries <= 3) {
+					System.out.print("password: " + password);
+						
+					if(mi1.users[user].getPassword().equals(password)) {
+						loggedUser = user;
+					}
+					else {
+						System.out.println("Password incorreta.");
+						tries++;
+					}
+				}			
 			}
-			
-		
-		else {
-			
-			
-			
+			else
+				System.out.println("Utilizador nao existente.");
 		}
-		
+		else
+			unknownCommand();
 	}
 	
 	private static void processSai() {
