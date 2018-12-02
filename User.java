@@ -1,14 +1,28 @@
 public class User {
 	
+	/* Constante */
+	
 	public static final int CAP_MAX = 5;
 
+	/* Vetor de objetos */
+	
 	public InfoTrip[] trip;
+	
+	/* Variaveis de instancia */
 	
 	public String email;
 	
 	public String username;
 	
 	public String password;
+	
+	/** Construtor:
+	 * 
+	 * @param email
+	 * @param username
+	 * @param password
+	 * 
+	 */
 
 	public User(String email, String username, String password) {
 		
@@ -21,6 +35,8 @@ public class User {
 		this.password = password;
 		
 	}
+	
+	/* Corpo da classe */
 	
 	public String getEmail() {
 		return email;

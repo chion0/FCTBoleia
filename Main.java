@@ -1,220 +1,312 @@
-
 import java.util.Scanner;
 
 public class Main {
 	
-		/*Constantes*/
+	/*Constante*/
 	
-	private static final String SAI = "SAI", JOGA = "JOGA", FIM = "FIM", AJUDA = "AJUDA", NOVO = "NOVO";
+	private static final String AJUDA = "ajuda", TERMINA = "termina", REGISTA = "regista", ENTRADA = "entrada";
+	private static final String SAI = "sai", NOVA = "nova", LISTA = "lista", BOLEIA = "boleia", CONSULTA = "consulta", REMOVE = "remove";
 	
-		
-		/*Variaveis de Instancia*/
+	private static String prompt = "> ";
 	
-	private static Key key;
-	private static Bet bet;
-	private static Jogo jogo;
-	private static float premioTotal;
-
-		
-		/*Metodos Auxiliares*/
+	/*Variaveis de Instancia*/
 	
-	private static void unknownCommand() {
-		System.out.println("Commando inexistente.");
-	}
-	
-	private static void prompt(boolean jogoAtivo) {
-		if(jogoAtivo)
-			System.out.print("FCTMILHOES> ");
-		else
-			System.out.print("> ");
-	}
-	
+	private static boolean termina = false;
 	
 		/*Corpo da Classe*/
 	
-	//Metodo para registar a opcao do interpretador de comandos escolhida pelo utilizador
-	private static String registerOption(Scanner in) {
-		String option = in.next().toUpperCase();
-		
-		return option;
-	}
-	
-	private static void processNovo(float premio, Jogo jg) {
-		if(!jg.isGameRunning() && premio > 0) {
-			
-			jg.activateGame();
-			
-			jogo = jg;
-			
-			key = jg.getNewKey();
-			
-			premioTotal = jg.valorPremio(premio);
-			
-			System.out.printf("Jogo iniciado. Valor do premio: %.2f Euros.\n",premioTotal);
-		}
-		else if (premio <= 0)
-			System.out.println("Valor incorreto.");
-		else
-			System.out.println("Comando inexistente.");
-		
-		prompt(jg.isGameRunning());
-	}
-	
-	//Metodo para criacao de um interpretador de comandos	
-	private static void executeAjuda(Jogo jg) {
-		if(!jg.isGameRunning()) {
-			System.out.println("novo - Novo jogo dando um valor inicial");
-			System.out.println("sai - Termina a execucao do programa");
-			System.out.println("ajuda - Mostra os comandos existentes");
-		}
-		else if(jg.isGameRunning()) {
-			System.out.println("joga - Simula uma aposta, dando uma chave");
-			System.out.println("fim - Termina o jogo em curso");
-			System.out.println("ajuda - Mostra os comandos existentes");
-		}
-		else
-			unknownCommand();
-		
-		prompt(jg.isGameRunning());
-	}
-	
+	/*Metodos Auxiliares*/
 
-	
-	/** @pre: b1.condition() == true
-	 *  @param: n1, n2, n3, n4, n5 sao os numeros da chave da aposta
-	 *  @param: e1, e2 sao as estrelas da chave da aposta
-	 *  
-	 *  Metodo de criacao de nova aposta para um jogo previamente criado
-	 */
-	private static void executeJoga(int n1, int n2, int n3, int n4, int n5, int e1, int e2) {
-		bet = jogo.getNewBet();
+	private static boolean isSessionActive() {
+		SessionState St1 = new SessionState();
+				
+				boolean cond = false;
 		
-		if(jogo.isGameRunning() || bet.condicao()) {
-			bet.joga(n1, n2, n3, n4, n5, e1, e2);
-			
-			int premioLvl = bet.getPremioLvl(key);
-			
-			if(premioLvl > 0)
-				System.out.println("Obrigado pela aposta. Premio de nivel: " + premioLvl);
-			else 
-				System.out.println("Obrigado pela aposta.");
-		}
-		else if(!bet.condicao())
-			System.out.println("Chave incorreta.");
-		else
-			unknownCommand();
+		if(St1.isSessionActive())
+			cond = true;
 		
-		prompt(jogo.isGameRunning());
+		return cond;
 	}
 	
-	private static void processFim() {
-		int i = 0, e = 1;
-		float valorPremio = jogo.devolvePremioPorJogador();
+	private static void changePrompt() {
+		if(isSessionActive())
+			System.out.print(+ prompt);
 		
-		if(jogo.isGameRunning()) {
-			
-			while(i < 13) {
-				if(bet.getNumberWinners(key, i) > 0) {
-						System.out.print("Nivel: " + e);
-						System.out.print(" Jogadores: " + bet.getNumberWinners(key, i));
-						System.out.printf(" Valor premio: %.2f",valorPremio);
-						System.out.println(" Euros");
-				}
-				else {
-						System.out.println("Nivel: " + e + " Jogadores: " + bet.getNumberWinners(key, i));
-				}
-				i++;
-				e++;
-			}
+		else
+			System.out.print(prompt);
 		
-			System.out.printf("Valor acumulado: %.2f\n",jogo.devolveValorAcumulado());
+	}
+	
+	private static void unknownCommand() {
+		System.out.println("Comando inexistente.");
+	}
+	
+	
+	/*Metodos Principais*/
+	
+	/** Informa sobre os comandos disponiveis no programa */
+	
+	private static void processAjuda() {
+		if(!isSessionActive()) {
+			System.out.println("ajuda - Mostra os comandos existentes");
+			System.out.println("termina - Termina a execucao do programa");
+			System.out.println("regista - Regista um novo utilizador no programa");
+			System.out.println("entrada - Permite a entrada (�login�) dum utilizador no programa");
 		}
 		else {
-			unknownCommand();
+			System.out.println("ajuda - Mostra os comandos existentes");
+			System.out.println("sai - Termina a sessao deste utilizador no programa");
+			System.out.println("nova - Regista uma nova deslocacao");
+			System.out.println("lista - Lista todas ou algumas deslocacoes registadas");
+			System.out.println("boleia - Regista uma boleia para uma dada deslocacao");
+			System.out.println("consulta - Lista a informacao de uma dada deslocacao");
+			System.out.println("remove - Retira uma dada deslocacao");
 		}
-		
-		jogo.deactivateGame();
-		
-		prompt(jogo.isGameRunning());
 	}
 	
-	//Metodo que permite a interpretacao do comando registado por registerOption()
-	private static void executeOption(String option, Scanner in, Jogo jg) {
+	/** Termina a execucao do programa */
+	
+	private static void processTermina() {
 		
-			if(!jg.isGameRunning()) {
-				switch(option) {
+		if(isSessionActive()) {
+			
+			termina = true;
+			
+			System.out.println("Obrigado. Ate a proxima.");
+			
+		}
+		
+		else 
+		  unknownCommand();
+		
+	}
+	
+	/** Regista um novo utilizador no programa:
+	 * 
+	 * @param email
+	 * 
+	 */
+	
+	private static void processRegista(Scanner in, MainInteraction mi1, User u1) {
+		
+		if(!isSessionActive()) {
+			
+			u1.email = in.next();
+			
+			if(mi1.searchIndex(u1.email) >= 0) {
+				
+				System.out.println("Utilizador ja existente.");
+				System.out.println("Registo nao efetuado.");
+				
+			}
+				
+			else {
 					
-					case NOVO:
-						float premio = in.nextFloat();
-						in.nextLine();
+					String nome = in.next();
+					
+					System.out.println("nome (maximo 50 caracteres):" + nome);
+					
+					String password = in.next();
+					
+					if(password.length() >= 3 && password.length() <= 5 && mi1.countChar(password) > 0 && mi1.countNumbers(password) > 0) {
 						
-						prompt(jg.isGameRunning());
+						System.out.println("Registo efetuado.");
 						
-						processNovo(premio, jg);
-					break;
-				
-					case AJUDA: 
-						prompt(jg.isGameRunning());
-						executeAjuda(jg);
-					break;
-				
-					default:
-						unknownCommand();
-					break;
+					}
+					
+					else
+						System.out.println("Password incorreta.");
+					
 				}
-			}
-			else if(jg.isGameRunning()) {
-				switch(option) {
+		
+		}
+		
+		else
+			unknownCommand();
 					
-					case JOGA:
-						
-						prompt(jg.isGameRunning());
-						
-						int n1 = in.nextInt();
-						int n2 = in.nextInt();
-						int n3 = in.nextInt();
-						int n4 = in.nextInt();
-						int n5 = in.nextInt();
-						
-						int e1 = in.nextInt();
-						int e2 = in.nextInt();
-						
-						executeJoga(n1, n2, n3, n4, n5, e1, e2);
-						
-					break;
+		
+	}
+	
+	/** Permite a entrada ("login") dum utilizador no programa:
+	 * 
+	 * @param email
+	 * @param in
+	 * 
+	 */
+	
+	private static void processEntrada(String email, String nome, String password, Scanner in, MainInteraction mi1) {
+		
+		if(!isSessionActive()) {
+			
 				
-					case AJUDA: 
-						prompt(jg.isGameRunning());
-						executeAjuda(jg);
-					break;
-				
-					case FIM: 
-						processFim();
-					break;
-				
-					default: unknownCommand();
-					break;
+			}
+			
+		
+		else {
+			
+			
+			
+		}
+		
+	}
+	
+	private static void processSai() {
+		
+		
+		
+	}
+	
+	/** Regista uma nova descolacao:
+	 * 
+	 * @param in
+	 * @param sessionState
+	 * 
+	 */
+	
+	private static void processNova(Scanner in) {
+		
+		if(isSessionActive()) {
+			
+			
+		}
+		
+		else {
+			
+			unknownCommand();
+			
+		}
+		
+	}
+	
+	private static void processLista() {
+		
+		
+		
+		
+	}
+	
+	/** Lista a informacao de uma dada deslocacao:
+	 * 
+	 * @param email
+	 * @param date
+	 * 
+	 */
+	
+	private static void processConsulta(String email, String date) {
+		
+		if(isSessionActive()) {
+			
+		}
+		
+		else {
+			
+			unknownCommand();
+			
+		}
+		
+	}
+	
+	/** Regista uma boleia para uma dada deslocacao:
+	 * 
+	 * @param email
+	 * @param date
+	 * 
+	 */
+	
+	private static void processBoleia(String email, String date) {
+		
+		
+		
+	}
+	
+	/** Retira uma dada deslocacao:
+	 * 
+	 * @param date
+	 * @param sessionState
+	 * 
+	 */
+	
+	private static void processRemove(String date, boolean sessionState) {
+		
+		if(sessionState) {
+			
+			
+			
+		}
+		
+		else 
+		  unknownCommand();	
+		
+	}
+	
+	private static String readOption(Scanner in){
+		String opt = in.next().toLowerCase();
+		
+		return opt;
+	}
+	
+	private static void executeOption(String opt, MainInteraction mi1, Scanner in) {
+		if(!isSessionActive()) {
+			switch(opt) {
+			case AJUDA: processAjuda();
+			break;
+			
+			case TERMINA: processTermina();
+			break;
+			
+			case REGISTA: processRegista(in,mi1);
+			break;
+			
+		//	case ENTRADA: processEntrada();
+			break;
+			
+			default: unknownCommand();
+			break;
+			}
+		}
+		else{
+			switch(opt) {
+			case AJUDA: processAjuda();
+			break;
+			
+			case SAI: processSai();
+			break;
+			
+		//	case NOVA: processNova();
+			break;
+			
+			case LISTA: processLista();
+			break;
+			
+		//	case BOLEIA: processBoleia();
+			break;
+			
+		//	case CONSULTA: processConsulta();
+			break;
+			
+		//	case REMOVE: processRemove();
+			break;
+			
+			default: unknownCommand();
+			break;
 			}
 		}
 	}
-	
-	//Metodo Principal
+			
 	public static void main(String[] args) {
+	
 		Scanner in = new Scanner(System.in);
-		Jogo jg = new Jogo();
 		
-		System.out.print("> ");
+		MainInteraction mi1 = new MainInteraction();
 		
-		String opt = registerOption(in);
+		String opt = "";
 		
-		while(!opt.equals(SAI)) {
-			executeOption(opt, in, jg);
-			opt = registerOption(in);
+		do {
+			opt = readOption(in);
+			
+	//		executeOption(opt);
 		}
-		
-		float valorAcumulado = jg.devolveValorAcumulado();
-		System.out.print("> ");
-		System.out.printf("Valor acumulado: %.2f Euros. Ate a proxima.\n",valorAcumulado);
+		while(!termina);
 	}
 
 }
