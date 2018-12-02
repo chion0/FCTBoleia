@@ -1,5 +1,7 @@
 public class InfoTrip {
 	
+	/* Variaveis de instancia */
+	
 	public String origin;
 
 	public String destiny;
@@ -11,6 +13,17 @@ public class InfoTrip {
 	public int seatsFree;
 	
 	public float duration;
+	
+	/** Construtor:
+	 * 
+	 * @param origin
+	 * @param destiny
+	 * @param date
+	 * @param hours
+	 * @param seatsFree
+	 * @param duration
+	 * 
+	 */
 	
 	public InfoTrip(String origin, String destiny, String date, int hours, int seatsFree, float duration) {
 		
@@ -27,6 +40,8 @@ public class InfoTrip {
 		this.duration = duration;
 		
 	}
+	
+	/* Corpo da classe */
 	
 	public String getOrigin() {
 		return origin;
