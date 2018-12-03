@@ -9,10 +9,14 @@ public class Main {
 	
 	private static String prompt = "> ";
 	
+	private static final int MAX_TRIES = 3;
+	
+	private static final int MIN_LENGTH = 3, MAX_LENGTH = 5;
+	
 	/*Variaveis de Instancia*/
 	
-	private static boolean termina = false;
 	private static int loggedUser;
+	private static boolean termina = false;
 	private static SessionState St1;
 	
 		/*Corpo da Classe*/
@@ -20,24 +24,25 @@ public class Main {
 	/*Metodos Auxiliares*/
 
 	private static boolean isSessionActive() {
-		St1 = new SessionState();
 				
-				boolean cond = false;
+		boolean cond = false;
 		
 		if(St1.isSessionActive())
 			cond = true;
 		
 		return cond;
+		
 	}
 	
-	private static void prompt(MainInteraction mi1) {
+	private static void changePrompt(MainInteraction mi1) {
+		
 		if(isSessionActive())
-			System.out.print(mi1.users[loggedUser].getEmail() + prompt);
+			System.out.print(mi1.user[loggedUser].getEmail() + prompt);
 		
 		else
 			System.out.print(prompt);
 		
-	}
+	} 
 	
 	private static void unknownCommand() {
 		System.out.println("Comando inexistente.");
@@ -53,7 +58,7 @@ public class Main {
 			System.out.println("ajuda - Mostra os comandos existentes");
 			System.out.println("termina - Termina a execucao do programa");
 			System.out.println("regista - Regista um novo utilizador no programa");
-			System.out.println("entrada - Permite a entrada (login) dum utilizador no programa");
+			System.out.println("Permite a entrada (\"login\") dum utilizador no programa");
 		}
 		else {
 			System.out.println("ajuda - Mostra os comandos existentes");
@@ -85,11 +90,15 @@ public class Main {
 	
 	/** Regista um novo utilizador no programa:
 	 * 
-	 * @param email
+	 * @param in
+	 * @param mi1
 	 * 
 	 */
 	
 	private static void processRegista(Scanner in, MainInteraction mi1) {
+		
+		if(mi1.isUserFull())
+			mi1.resizeUser();
 		
 		if(!isSessionActive()) {
 			
@@ -108,22 +117,38 @@ public class Main {
 					
 					System.out.println("nome (maximo 50 caracteres):" + name);
 					
+					int g = 0;
+					
+				for(int i = 0; i < MAX_TRIES ; i++) {	
+					
 					String password = in.next();
 					
-					if(password.length() >= 3 && password.length() <= 5 && mi1.countChar(password) > 0 && mi1.countNumbers(password) > 0) {
-						
-						mi1.newUser(email, name, password);
+					if(password.length() >= MIN_LENGTH && password.length() <= MAX_LENGTH && mi1.countChar(password) > 0 && mi1.countNumbers(password) > 0) {
 						
 						System.out.println("Registo efetuado.");
 						
+						mi1.user[mi1.counterUser - 1] =  mi1.newUser(email, name, password);
+						
+						break;
+						
 					}
 					
-					else
+					else {
+						
 						System.out.println("Password incorreta.");
+						
+						g++;
+						
+						if(g == 3)
+							System.out.println("Registo nao efetuado.");
 					
 				}
 		
+			}	
+			
 		}
+			
+	}
 		
 		else
 			unknownCommand();
@@ -133,45 +158,53 @@ public class Main {
 	
 	/** Permite a entrada ("login") dum utilizador no programa:
 	 * 
-	 * @param email
 	 * @param in
+	 * @param mi1
 	 * 
 	 */
 	
-	private static void processEntrada(Scanner in,  MainInteraction mi1) {
+	private static void processEntrada(Scanner in, MainInteraction mi1) {
 		
 		if(!isSessionActive()) {
+			
 			String email = in.next();
 			in.nextLine();
 			
 			if(mi1.searchIndex(email) >= 0) {
 				int user = mi1.searchIndex(email);
 				
-				String password = in.next();
-				in.nextLine();
-				
 				int tries = 0;
 				
-				while(tries <= 3) {
-					System.out.print("password: " + password);
+				while(tries <= MAX_TRIES) {
+					
+					String password = in.next();
+					in.nextLine();
+					
+					System.out.println("password: " + password);
 						
-					if(mi1.users[user].getPassword().equals(password)) {
+					if(mi1.user[user].getPassword().equals(password)) {
+						
 						loggedUser = user;
 						St1.sessionOn();
 						break;
+						
 					}
+					
 					else {
 						System.out.println("Password incorreta.");
 						tries++;
 					}
 				}			
 			}
+			
 			else
 				System.out.println("Utilizador nao existente.");
 		}
+		
 		else
 			unknownCommand();
-	}
+		
+}
 	
 	private static void processSai() {
 		
@@ -262,7 +295,10 @@ public class Main {
 		
 	}
 	
-	private static String readOption(Scanner in){
+	private static String readOption(Scanner in, MainInteraction mi1){
+		
+		changePrompt(mi1);
+		
 		String opt = in.next().toLowerCase();
 		
 		return opt;
@@ -277,10 +313,10 @@ public class Main {
 			case TERMINA: processTermina();
 			break;
 			
-			case REGISTA: processRegista(in,mi1);
+		    case REGISTA: processRegista(in,mi1);
 			break;
 			
-		//	case ENTRADA: processEntrada();
+			case ENTRADA: processEntrada(in, mi1);
 			break;
 			
 			default: unknownCommand();
@@ -296,19 +332,19 @@ public class Main {
 			break;
 			
 		//	case NOVA: processNova();
-			break;
+		//	break;
 			
 			case LISTA: processLista();
 			break;
 			
 		//	case BOLEIA: processBoleia();
-			break;
+		//	break;
 			
 		//	case CONSULTA: processConsulta();
-			break;
+		//	break;
 			
 		//	case REMOVE: processRemove();
-			break;
+		//	break;
 			
 			default: unknownCommand();
 			break;
@@ -327,9 +363,9 @@ public class Main {
 		String opt = "";
 		
 		do {
-			opt = readOption(in);
+			opt = readOption(in,mi1);
 			
-	//		executeOption(opt);
+	    	executeOption(opt,mi1,in);
 		}
 		while(!termina);
 	}

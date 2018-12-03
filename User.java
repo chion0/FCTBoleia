@@ -12,25 +12,25 @@ public class User {
 	
 	public String email;
 	
-	public String username;
+	public String name;
 	
 	public String password;
 	
 	/** Construtor:
 	 * 
 	 * @param email
-	 * @param username
+	 * @param name
 	 * @param password
 	 * 
 	 */
 
-	public User(String email, String username, String password) {
+	public User(String email, String name, String password) {
 		
 		trip = new InfoTrip[CAP_MAX];
 		
 		this.email = email;
 		
-		this.username = username;
+		this.name = name;
 		
 		this.password = password;
 		
@@ -42,12 +42,15 @@ public class User {
 		return email;
 	}
 	
-	public String getUsername() {
-		return username;
+	public String getName() {
+		return name;
 	}
 	
 	public String getPassword() {
 		return password;
 	}
 	
+	public InfoTrip[] getTrip() {
+		return trip;
+	}
 }

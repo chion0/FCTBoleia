@@ -6,7 +6,7 @@ public class InfoTrip {
 
 	public String destiny;
 
-	public String date;
+	public BasicDate date;
 	
 	public int hours;
 
@@ -31,7 +31,9 @@ public class InfoTrip {
 		
 		this.destiny = destiny;
 		
-		this.date = date;
+		BasicDate Bd1 = new BasicDate(date);
+		
+		this.date = Bd1;
 		
 		this.hours = hours;
 		
@@ -51,7 +53,7 @@ public class InfoTrip {
 		return destiny;
 	}
 	
-	public String getDate() {
+	public BasicDate getDate() {
 		return date;
 	}
 	

@@ -8,11 +8,11 @@ public class MainInteraction {
 	
 	/* Vetor de objetos */
 	
-	public User[] users;
+	public User[] user;
 	
 	/* Vetores */
 	
-	public String []alphabet = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
+	public String[] alphabet = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
 	
 	public int []numbers = {0,1,2,3,4,5,6,7,8,9};
 	
@@ -24,7 +24,7 @@ public class MainInteraction {
 	
 	public MainInteraction() {
 		
-		users = new User[CAP_MAX];
+		user = new User[CAP_MAX];
 		
 		alphabet = new String[CAP_MAX_ALPHABET];
 		
@@ -36,9 +36,15 @@ public class MainInteraction {
 
 	/* Corpo da classe */
 	
-	/*public String getUserEmail(User u1) {
+	public User newUser(String email, String name, String password) {
+		
+		return new User(email, name, password);
+		
+	}
+		
+	public String getUserEmail(User u1) {
 		return u1.getEmail();
-	}*/
+	}
 	
 	public int searchIndex(String email) {
 		
@@ -48,9 +54,9 @@ public class MainInteraction {
 		
 		boolean found = false;
 		
-		while(i < counterUser && !found) {
+		while((i < counterUser) && (!found)) {
 			
-			if(users[i].getEmail().equals(email)) 
+			if(user[i].getEmail().equals(email)) 
 				found = true;
 				
 			else i++;
@@ -60,6 +66,9 @@ public class MainInteraction {
 		if(found)
 			result = i;
 		
+		else
+			counterUser++;
+			
 		return result;
 		
 	}
@@ -68,17 +77,13 @@ public class MainInteraction {
 		
 		String temp = alphabet.toString();
 		
-		char[] alphabet = temp.toCharArray();
-		
 		int countChar = 0;
 		
-		int i; int j;
-		
-		for(i = 0; i < CAP_MAX_NUMBERS; i++) {
+		for(int i = 0; i < CAP_MAX_NUMBERS; i++) {
 			
-			for(j = 0; j < password.length(); j++) {
+			for(int j = 0; j < password.length(); j++) {
 				
-				if(password.charAt(j) == alphabet[i])
+				if(password.compareTo(temp) > 0)
 					countChar++;
 
 			}
@@ -91,11 +96,9 @@ public class MainInteraction {
 		
 		int countNumber = 0;
 		
-		int i; int j;
-		
-		for(i = 0; i < CAP_MAX_NUMBERS; i++) {
+		for(int i = 0; i < CAP_MAX_NUMBERS; i++) {
 			
-			for(j = 0; j < password.length(); j++) {
+			for(int j = 0; j < password.length(); j++) {
 				
 				Character c = password.charAt(j);
 				
@@ -111,21 +114,21 @@ public class MainInteraction {
 	
 	public void resizeUser() {
 		
-		User[] temp = new User[(users.length * GROWTH)];
+		User[] temp = new User[(user.length * GROWTH)];
 		
-		for(int i = 0; i <= users.length; i++)
-			temp[i] = users[i];
+		for(int i = 0; i <= user.length; i++)
+			temp[i] = user[i];
 		
-		users = temp;
+		user = temp;
 		
 	}
 	
 	public boolean isUserFull() {
-		return counterUser == users.length;
+		return counterUser == user.length;
 	}
 	
 	
-	/*public void nova(String origin, String destiny, String date, int hours, int seatsFree, float duration, User u1) {
+	public void nova(String origin, String destiny, String date, int hours, int seatsFree, float duration, User u1) {
 		
 		TripsCollection t1 = new TripsCollection(u1);
 		
@@ -134,10 +137,6 @@ public class MainInteraction {
 
 		u1.trip[t1.counterTrip++] = new InfoTrip(origin, destiny, date, hours, seatsFree, duration);
 		
-	}*/
+	}
 	
-	public void newUser(String email, String name, String password) {
-		
-		users[counterUser++] = new User(email, name, password);
-	}	
 }
