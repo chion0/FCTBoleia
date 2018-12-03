@@ -18,11 +18,49 @@ public class BasicDate {
 		}
 
 	}
+	
+	private boolean isDayValid() {
+		
+		// Ano bissexto
+				boolean result = false;
 
-	// TODO
+				if(getYear() % 4 == 0) {
+					if(getMonth() == 2) {
+						if(1 <= getDay() && getDay() <= 29) {
+							result = true;	
+						}
+					}	
+				}
+				
+				else if(getMonth() == 2) {
+					if(1 <= getDay() && getDay() <= 28)
+						result = true;
+				}
+				else if(getMonth() == 1 || getMonth() == 3 || getMonth() == 5 || getMonth() == 7 || getMonth() == 8 || getMonth() == 10 || getMonth() == 12) {
+					if(1 <= getDay() && getDay() <= 31)
+						result = true;
+				}
+				else if(getMonth() == 4 || getMonth() == 6 || getMonth() == 9 || getMonth() == 11) {
+					if(1 <= getDay() && getDay() <= 30)
+						result = true;
+				}
+					
+				return result;
+				
+	}
+
 	public boolean isValid() {
-
-		return false;
+		
+		boolean isMonthValid = false, result = false;
+		
+		if (1 <= getMonth() && getMonth() <= 12)
+			isMonthValid = true;
+		
+		if(isDayValid() && isMonthValid)
+			result = true;
+		
+		return result;
+		
 	}
 
 	/**
@@ -52,6 +90,4 @@ public class BasicDate {
 		return rawDate[1];
 	}
 	
-
-
 }

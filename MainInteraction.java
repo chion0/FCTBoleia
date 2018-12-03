@@ -127,16 +127,52 @@ public class MainInteraction {
 		return counterUser == user.length;
 	}
 	
-	
-	public void nova(String origin, String destiny, String date, int hours, int seatsFree, float duration, User u1) {
+	public boolean isTripScheduled(String date, int loggedUser) {
 		
-		TripsCollection t1 = new TripsCollection(u1);
+		BasicDate bd = new BasicDate(date);
 		
-		if(t1.isTripFull(u1))
-			t1.resizeTrip(u1);
+		InfoTrip temp[] = user[loggedUser].getTrip();
+		
+		int counter = user[loggedUser].getCounterTrip();
+		
+		Iterator it1 = new Iterator(temp, counter);
+		
+		boolean result = false;
 
-		u1.trip[t1.counterTrip++] = new InfoTrip(origin, destiny, date, hours, seatsFree, duration);
-		
+			while(it1.hasNext()) {
+				
+				if(bd.getDay() == it1.nextTrip().getDate().getDay()) {
+					
+					if(bd.getMonth() == it1.nextTrip().getDate().getMonth()) {
+						
+						if(bd.getYear() == it1.nextTrip().getDate().getYear()) {
+							result = true;
+							break;
+							
+						}
+					}
+				}
+			}
+	
+		return result;
 	}
 	
+	public boolean isDataValid(String date, int time, int freeSeats, float duration) {
+		
+		BasicDate bd = new BasicDate(date);
+		boolean result = false;
+		
+		if(bd.isValid() && 0 <= time && time <= 23 && 0 <= freeSeats && 0 < duration) {
+			result = true;
+		}
+		
+		return result;
+	}
+	
+	public void scheduleTrip(String origin, String destination, String date, int time, int freeSeats, float duration, int loggedUser) {
+		if(user[loggedUser].isTripFull())
+			user[loggedUser].resizeTrip();
+		
+		user[loggedUser].newTrip(origin, destination, date, time, freeSeats, duration);
+	}
 }

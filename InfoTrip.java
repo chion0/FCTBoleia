@@ -4,7 +4,7 @@ public class InfoTrip {
 	
 	public String origin;
 
-	public String destiny;
+	public String destination;
 
 	public BasicDate date;
 	
@@ -17,7 +17,7 @@ public class InfoTrip {
 	/** Construtor:
 	 * 
 	 * @param origin
-	 * @param destiny
+	 * @param destination
 	 * @param date
 	 * @param hours
 	 * @param seatsFree
@@ -25,13 +25,13 @@ public class InfoTrip {
 	 * 
 	 */
 	
-	public InfoTrip(String origin, String destiny, String date, int hours, int seatsFree, float duration) {
+	public InfoTrip(String origin, String destination, String date, int hours, int seatsFree, float duration) {
+		
+		BasicDate Bd1 = new BasicDate(date);
 		
 		this.origin = origin;
 		
-		this.destiny = destiny;
-		
-		BasicDate Bd1 = new BasicDate(date);
+		this.destination = destination;
 		
 		this.date = Bd1;
 		
@@ -49,8 +49,8 @@ public class InfoTrip {
 		return origin;
 	}
 	
-	public String getDestiny() {
-		return destiny;
+	public String getDestination() {
+		return destination;
 	}
 	
 	public BasicDate getDate() {

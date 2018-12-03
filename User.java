@@ -2,7 +2,7 @@ public class User {
 	
 	/* Constante */
 	
-	public static final int CAP_MAX = 5;
+	public static final int CAP_MAX = 5, GROWTH = 2;
 
 	/* Vetor de objetos */
 	
@@ -15,6 +15,8 @@ public class User {
 	public String name;
 	
 	public String password;
+	
+	public int counterTrip;
 	
 	/** Construtor:
 	 * 
@@ -34,6 +36,8 @@ public class User {
 		
 		this.password = password;
 		
+		counterTrip = 0;
+		
 	}
 	
 	/* Corpo da classe */
@@ -51,6 +55,28 @@ public class User {
 	}
 	
 	public InfoTrip[] getTrip() {
-		return trip;
+		return trip;		
+	}
+	
+	public int getCounterTrip() {
+		return counterTrip;
+	}
+	
+	public boolean isTripFull() {
+		return counterTrip == trip.length;
+	}
+	
+	public void resizeTrip() {
+		
+		InfoTrip[] temp = new InfoTrip[(trip.length * GROWTH)];
+		
+		for(int i = 0; i <= trip.length; i++)
+			temp[i] = trip[i];
+		
+		trip = temp;
+	}	
+	
+	public void newTrip(String origin, String destination, String date, int time, int freeSeats, float duration) {
+		trip[counterTrip++] = new InfoTrip(origin, destination, date, time, freeSeats, duration);
 	}
 }
