@@ -24,18 +24,18 @@ public class Main {
 	/*Metodos Auxiliares*/
 
 	private static boolean isSessionActive() {
-		
-		SessionState St1 = new SessionState();
 				
-				boolean cond = false;
+		boolean cond = false;
 		
 		if(St1.isSessionActive())
 			cond = true;
 		
 		return cond;
+		
 	}
 	
 	private static void changePrompt(MainInteraction mi1) {
+		
 		if(isSessionActive())
 			System.out.print(mi1.user[loggedUser].getEmail() + prompt);
 		
@@ -58,7 +58,7 @@ public class Main {
 			System.out.println("ajuda - Mostra os comandos existentes");
 			System.out.println("termina - Termina a execucao do programa");
 			System.out.println("regista - Regista um novo utilizador no programa");
-			System.out.println("entrada - Permite a entrada (�login�) dum utilizador no programa");
+			System.out.println("Permite a entrada (”login”) dum utilizador no programa");
 		}
 		else {
 			System.out.println("ajuda - Mostra os comandos existentes");
@@ -117,6 +117,8 @@ public class Main {
 					
 					System.out.println("nome (maximo 50 caracteres):" + name);
 					
+					int g = 0;
+					
 				for(int i = 0; i < MAX_TRIES ; i++) {	
 					
 					String password = in.next();
@@ -131,13 +133,22 @@ public class Main {
 						
 					}
 					
-					else
+					else {
+						
 						System.out.println("Password incorreta.");
+						
+						g++;
+						
+						if(g == 3)
+							System.out.println("Registo nao efetuado.");
 					
 				}
 		
 			}	
+			
 		}
+			
+	}
 		
 		else
 			unknownCommand();
@@ -155,24 +166,30 @@ public class Main {
 	private static void processEntrada(Scanner in, MainInteraction mi1) {
 		
 		if(!isSessionActive()) {
+			
 			String email = in.next();
 			in.nextLine();
 			
 			if(mi1.searchIndex(email) >= 0) {
 				int user = mi1.searchIndex(email);
 				
-				String password = in.next();
-				in.nextLine();
-				
 				int tries = 0;
 				
 				while(tries <= MAX_TRIES) {
-					System.out.print("password: " + password);
+					
+					String password = in.next();
+					in.nextLine();
+					
+					System.out.println("password: " + password);
 						
 					if(mi1.user[user].getPassword().equals(password)) {
+						
 						loggedUser = user;
 						St1.sessionOn();
+						break;
+						
 					}
+					
 					else {
 						System.out.println("Password incorreta.");
 						tries++;
@@ -338,6 +355,8 @@ public class Main {
 	public static void main(String[] args) {
 	
 		Scanner in = new Scanner(System.in);
+		
+		St1 = new SessionState();
 		
 		MainInteraction mi1 = new MainInteraction();
 		
