@@ -55,12 +55,15 @@ public class Main {
 	
 	private static void processAjuda() {
 		if(!isSessionActive()) {
+			
 			System.out.println("ajuda - Mostra os comandos existentes");
 			System.out.println("termina - Termina a execucao do programa");
 			System.out.println("regista - Regista um novo utilizador no programa");
-			System.out.println("Permite a entrada (”login”) dum utilizador no programa");
+			System.out.println("Permite a entrada (\"login\") dum utilizador no programa");
+			
 		}
 		else {
+			
 			System.out.println("ajuda - Mostra os comandos existentes");
 			System.out.println("sai - Termina a sessao deste utilizador no programa");
 			System.out.println("nova - Regista uma nova deslocacao");
@@ -68,6 +71,7 @@ public class Main {
 			System.out.println("boleia - Regista uma boleia para uma dada deslocacao");
 			System.out.println("consulta - Lista a informacao de uma dada deslocacao");
 			System.out.println("remove - Retira uma dada deslocacao");
+			
 		}
 	}
 	
@@ -208,58 +212,64 @@ public class Main {
 	
 	private static void processSai() {
 		
+		if(isSessionActive()) {
+			
+			St1.sessionOff();
+			
+			System.out.println("Obrigado. Ate a proxima.");
+			
+		}
 		
+		else
+			unknownCommand();
 		
 	}
 	
 	/** Regista uma nova descolacao:
 	 * 
 	 * @param in
-	 * @param sessionState
 	 * 
 	 */
 	
-	private static void processNova(Scanner in) {
+	private static void processNova(Scanner in, MainInteraction mi1) {
+		
+		if(isSessionActive()) {
+			
+			
+			
+		}
+		
+		else
+			unknownCommand();
+		
+	}
+	
+	/* Lista todas ou algumas deslocacoes registadas: */
+	
+	private static void processLista(Scanner in) {
 		
 		if(isSessionActive()) {
 			
 			
 		}
 		
-		else {
-			
+		else
 			unknownCommand();
-			
-		}
-		
 	}
 	
-	private static void processLista() {
-		
-		
-		
-		
-	}
+	/** Lista a informacao de uma dada deslocacao: */
 	
-	/** Lista a informacao de uma dada deslocacao:
-	 * 
-	 * @param email
-	 * @param date
-	 * 
-	 */
-	
-	private static void processConsulta(String email, String date) {
+	private static void processConsulta(Scanner in) {
 		
 		if(isSessionActive()) {
 			
+			
+			
 		}
 		
-		else {
-			
+		else
 			unknownCommand();
-			
-		}
-		
+				
 	}
 	
 	/** Regista uma boleia para uma dada deslocacao:
@@ -278,13 +288,12 @@ public class Main {
 	/** Retira uma dada deslocacao:
 	 * 
 	 * @param date
-	 * @param sessionState
 	 * 
 	 */
 	
-	private static void processRemove(String date, boolean sessionState) {
+	private static void processRemove(String date) {
 		
-		if(sessionState) {
+		if(isSessionActive()) {
 			
 			
 			

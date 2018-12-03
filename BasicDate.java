@@ -1,4 +1,3 @@
-
 public class BasicDate {
 
 	private static final int NUM_FIELDS = 3;
@@ -20,10 +19,39 @@ public class BasicDate {
 
 	}
 
-	// TODO
 	public boolean isValid() {
+		
+		// Ano bissexto
 
+		if(getYear() % 4 == 0) {
+			
+			if(getMonth() == 2) {
+				
+				if(1 <= getDay() && getDay() <= 29) {
+					
+					return true;
+					
+				}
+			
+			}
+				
+		}
+		
+		else if(getMonth() == 2) {
+			
+			
+			}
+		
+		else if(getMonth() == 1 || getMonth() == 3 || getMonth() == 5 || getMonth() == 7 || getMonth() == 8 || getMonth() == 10 || getMonth() == 12) {
+			
+		}
+		
+		else if(getMonth() == 4 || getMonth() == 6 || getMonth() == 9 || getMonth() == 11) {
+			
+		}
+			
 		return false;
+		
 	}
 
 	/**
@@ -53,6 +81,4 @@ public class BasicDate {
 		return rawDate[1];
 	}
 	
-
-
 }

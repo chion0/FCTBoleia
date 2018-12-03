@@ -127,15 +127,31 @@ public class MainInteraction {
 		return counterUser == user.length;
 	}
 	
-	
-	public void nova(String origin, String destiny, String date, int hours, int seatsFree, float duration, User u1) {
+	public boolean isTripScheduled(String date, int loggedUser) {
 		
-		TripsCollection t1 = new TripsCollection(u1);
+		BasicDate bd = new BasicDate(date);
 		
-		if(t1.isTripFull(u1))
-			t1.resizeTrip(u1);
-
-		u1.trip[t1.counterTrip++] = new InfoTrip(origin, destiny, date, hours, seatsFree, duration);
+		InfoTrip temp[] = user[loggedUser].getTrip();
+		
+		int counter = user[loggedUser].getCounterTrip();
+		
+		Iterator it1 = new Iterator(temp, counter);
+		
+		while(it1.hasNext()) {
+			
+			if(bd.getDay() == it1.nextTrip().getDate().getDay()) {
+				
+				if(bd.getMonth() == it1.nextTrip().getDate().getMonth()) {
+					
+					if(bd.getYear() == it1.nextTrip().getDate().getYear()) {
+						
+					}
+					
+				}
+				
+			}
+			
+		}
 		
 	}
 	

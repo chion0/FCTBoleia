@@ -6,7 +6,7 @@ public class InfoTrip {
 
 	public String destiny;
 
-	public String date;
+	public BasicDate date;
 	
 	public int hours;
 
@@ -27,11 +27,13 @@ public class InfoTrip {
 	
 	public InfoTrip(String origin, String destiny, String date, int hours, int seatsFree, float duration) {
 		
+		BasicDate Bd1 = new BasicDate(date);
+		
 		this.origin = origin;
 		
 		this.destiny = destiny;
 		
-		this.date = date;
+		this.date = Bd1;
 		
 		this.hours = hours;
 		
@@ -51,7 +53,7 @@ public class InfoTrip {
 		return destiny;
 	}
 	
-	public String getDate() {
+	public BasicDate getDate() {
 		return date;
 	}
 	
