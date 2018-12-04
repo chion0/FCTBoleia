@@ -62,19 +62,23 @@ public class User {
 		return counterTrip;
 	}
 	
-	public boolean isTripFull(User u1) {
-		return counterTrip == u1.trip.length;
+	public boolean isTripFull() {
+		return counterTrip == trip.length;
 	}
 	
-	public void resizeTrip(User u1) {
+	public void resizeTrip() {
 		
-		InfoTrip[] temp = new InfoTrip[(u1.trip.length * GROWTH)];
+		InfoTrip[] temp = new InfoTrip[(trip.length * GROWTH)];
 		
-		for(int i = 0; i <= u1.trip.length; i++)
-			temp[i] = u1.trip[i];
+		for(int i = 0; i <= trip.length; i++)
+			temp[i] = trip[i];
 		
-		u1.trip = temp;
+		trip = temp;
 		
+	}
+	
+	public void newTrip(String origin, String destination, String date, int time, int freeSeats, float duration) {
+		trip[counterTrip++] = new InfoTrip(origin, destination, date, time, freeSeats, duration);
 	}
 	
 }

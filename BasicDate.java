@@ -19,38 +19,47 @@ public class BasicDate {
 
 	}
 
-	public boolean isValid() {
+	private boolean isDayValid() {
 		
 		// Ano bissexto
+				boolean result = false;
 
-		if(getYear() % 4 == 0) {
-			
-			if(getMonth() == 2) {
-				
-				if(1 <= getDay() && getDay() <= 29) {
-					
-					return true;
-					
+				if(getYear() % 4 == 0) {
+					if(getMonth() == 2) {
+						if(1 <= getDay() && getDay() <= 29) {
+							result = true;	
+						}
+					}	
 				}
-			
-			}
 				
-		}
+				else if(getMonth() == 2) {
+					if(1 <= getDay() && getDay() <= 28)
+						result = true;
+				}
+				else if(getMonth() == 1 || getMonth() == 3 || getMonth() == 5 || getMonth() == 7 || getMonth() == 8 || getMonth() == 10 || getMonth() == 12) {
+					if(1 <= getDay() && getDay() <= 31)
+						result = true;
+				}
+				else if(getMonth() == 4 || getMonth() == 6 || getMonth() == 9 || getMonth() == 11) {
+					if(1 <= getDay() && getDay() <= 30)
+						result = true;
+				}
+					
+				return result;
+				
+	}
+	
+	public boolean isValid() {
 		
-		else if(getMonth() == 2) {
-			
-			
-			}
+		boolean isMonthValid = false, result = false;
 		
-		else if(getMonth() == 1 || getMonth() == 3 || getMonth() == 5 || getMonth() == 7 || getMonth() == 8 || getMonth() == 10 || getMonth() == 12) {
-			
-		}
+		if (1 <= getMonth() && getMonth() <= 12)
+			isMonthValid = true;
 		
-		else if(getMonth() == 4 || getMonth() == 6 || getMonth() == 9 || getMonth() == 11) {
-			
-		}
-			
-		return false;
+		if(isDayValid() && isMonthValid)
+			result = true;
+		
+		return result;
 		
 	}
 

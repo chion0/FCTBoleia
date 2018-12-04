@@ -13,13 +13,13 @@ public class Iterator {
 	/** Construtor:
 	 *   
 	 * @param boleias
-	 * @param contador
+	 * @param counter
 	 * 
 	 */
 	
-	public Iterator(InfoTrip[] trip, int contador) {
+	public Iterator(InfoTrip[] trip, int counter) {
 		
-		this.counter = contador;
+		this.counter = counter;
 		
 		currentIndex = 0;
 		
@@ -30,13 +30,13 @@ public class Iterator {
 	/** Construtor:
 	 * 
 	 * @param users
-	 * @param contador
+	 * @param counter
 	 * 
 	 */
 	
-	public Iterator(User[] users, int contador) {
+	public Iterator(User[] users, int counter) {
 		
-		this.counter = contador;
+		this.counter = counter;
 		
 		currentIndex = 0;
 		

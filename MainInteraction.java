@@ -4,7 +4,7 @@ public class MainInteraction {
 	
 	public static final int GROWTH = 2, CAP_MAX = 5;
 	
-	public static final int CAP_MAX_NUMBERS = 10, CAP_MAX_ALPHABET = 26;
+	public static final int CAP_MAX_POSSIBLE_CHAR = 36;
 	
 	/* Vetor de objetos */
 	
@@ -12,9 +12,7 @@ public class MainInteraction {
 	
 	/* Vetores */
 	
-	public String[] alphabet = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
-	
-	public int []numbers = {0,1,2,3,4,5,6,7,8,9};
+	public String possibleCharacters = "abcdefghijklmnopqrstuvwxyz0123456789";
 	
 	/* Variavel de instancia */
 	
@@ -26,15 +24,15 @@ public class MainInteraction {
 		
 		user = new User[CAP_MAX];
 		
-		alphabet = new String[CAP_MAX_ALPHABET];
-		
-		numbers = new int[CAP_MAX_NUMBERS];
-		
 		counterUser = 0;
 		
 	}
 
 	/* Corpo da classe */
+	
+	public InfoTrip[] getTrip(User u1) {		
+		return u1.trip;	
+	}
 	
 	public User newUser(String email, String name, String password) {
 		
@@ -74,42 +72,31 @@ public class MainInteraction {
 	}
 	
 	public int countChar(String password) {
-		
-		String temp = alphabet.toString();
-		
+	    
 		int countChar = 0;
 		
-		for(int i = 0; i < CAP_MAX_NUMBERS; i++) {
-			
-			for(int j = 0; j < password.length(); j++) {
-				
-				if(password.compareTo(temp) > 0)
-					countChar++;
-
-			}
-		}
-		
-		return countChar;
-	}
-	
-	public int countNumbers(String password) {
-		
-		int countNumber = 0;
-		
-		for(int i = 0; i < CAP_MAX_NUMBERS; i++) {
-			
-			for(int j = 0; j < password.length(); j++) {
-				
-				Character c = password.charAt(j);
-				
-				if(Character.isDigit(c))
-					countNumber++;
-			}
-			
-		}
-		
-		return countNumber++;
-		
+	    for(int i = 0; i < password.length(); i++) {
+	        char c = Character.toLowerCase(password.charAt(i)); 
+	        
+	        int j = 0;
+	    
+	        while(j <= CAP_MAX_POSSIBLE_CHAR) {
+	        	
+	        	char b = possibleCharacters.charAt(j);
+	   	        
+		        if (c == b) { 
+		            countChar ++;	
+		            break;
+	        }
+		        
+		        else j++;
+		        
+	    }  
+	        
+	  }      
+	        
+	    return countChar;
+	    
 	}
 	
 	public void resizeUser() {
@@ -137,13 +124,23 @@ public class MainInteraction {
 		
 		Iterator it1 = new Iterator(temp, counter);
 		
+		boolean result = false;
+		
 		while(it1.hasNext()) {
 			
-			if(bd.getDay() == it1.nextTrip().getDate().getDay()) {
+			it1.reinitialize();
+			
+			InfoTrip trip = it1.nextTrip();
+			
+			if(bd.getDay() == trip.getDate().getDay()) {
 				
-				if(bd.getMonth() == it1.nextTrip().getDate().getMonth()) {
+				if(bd.getMonth() == trip.getDate().getMonth()) {
 					
-					if(bd.getYear() == it1.nextTrip().getDate().getYear()) {
+					if(bd.getYear() == trip.getDate().getYear()) {
+						
+						result = true;
+						
+						break;
 						
 					}
 					
@@ -153,6 +150,135 @@ public class MainInteraction {
 			
 		}
 		
+		return result;
+		
 	}
 	
+	public boolean isDataValid(String date, int time, int freeSeats, float duration) {
+		
+		BasicDate bd = new BasicDate(date);
+		boolean result = false;
+		
+		if(bd.isValid() && 0 <= time && time <= 23 && 0 <= freeSeats && 0 < duration) {
+			result = true;
+		}
+		
+		return result;
+	}
+	
+	public void scheduleTrip(String origin, String destination, String date, int time, int freeSeats, float duration, int loggedUser) {
+		if(user[loggedUser].isTripFull())
+			user[loggedUser].resizeTrip();
+		
+		user[loggedUser].newTrip(origin, destination, date, time, freeSeats, duration);
+	}
+	
+	/* Se counter < 0 nao tera descolacoes registadas */
+	
+	public Iterator iteratorCurrentUser(int loggedUser) {
+		
+		int counter = user[loggedUser].getCounterTrip();
+		
+		Iterator it1 = new Iterator(user[loggedUser].getTrip(),counter);
+		
+		return it1;
+		
+	}
+	
+	public Iterator iteratorAllUsers(String date) {
+
+		Iterator it2 = new Iterator(user,counterUser);
+	
+		return it2;
+	}
+	
+	private void orderDates(int loggedUser, String date) {
+		
+		BasicDate bd = new BasicDate(date);
+		
+		int counter = user[loggedUser].getCounterTrip();
+		
+		InfoTrip temp[] = user[loggedUser].getTrip();
+		
+		Iterator it1 = new Iterator(temp, counter);
+		
+		while(it1.hasNext()) {
+			
+			it1.reinitialize();
+			
+			InfoTrip trip = it1.nextTrip();
+			
+			if(bd.getYear() == trip.getDate().getYear()) {
+				
+				if(bd.getMonth() == trip.getDate().getMonth()) {
+					
+					if(bd.getDay() < trip.getDate().getDay()) {
+						
+						// Definir vetor temporario para dar storage aos valores de getDay()
+						
+					}
+					
+					else if(bd.getDay() > trip.getDate().getDay()) {
+						
+						// Same shit
+						
+					}
+					
+				}
+				
+				else if(bd.getMonth() < trip.getDate().getMonth()) {
+					
+					// Vetor temp
+					
+				}
+				
+				else if(bd.getMonth() > trip.getDate().getMonth()) {
+					
+					// Vetor temp
+					
+				}
+				
+			}
+			
+			else if(bd.getYear() < trip.getDate().getYear()) {
+				
+				// vetor temp
+				
+			}
+			
+			else if(bd.getYear() > trip.getDate().getYear()) {
+				
+				// Vetor temp
+				
+			}
+			
+		}
+		
+	}
+	
+	public int dateScheduledTrips(String date, int loggedUser) {
+		
+		int i = 0;
+		
+		int counter = user[i].getCounterTrip();
+		
+		Iterator it1 = new Iterator(user[i].getTrip(),counter);
+		
+		while(it1.hasNext()) {
+			
+			it1.nextTrip().getOrigin();
+			it1.nextTrip().getDestination();
+			it1.nextTrip().getDate();
+			it1.nextTrip().getHours();
+			it1.nextTrip().getDuration();
+			it1.nextTrip().getSeatsFree();
+		
+			i++;
+			
+		}
+	
+		return i;
+		
+	}
+
 }
