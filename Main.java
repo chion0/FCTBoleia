@@ -291,6 +291,7 @@ public class Main {
 				int counterTrip1 = mi1.user[loggedUser].getCounterTrip();
 
 				if (counterTrip1 > 0) {
+			/*Organizar datas antes de dar print*/
 					Iterator itTrips1 = mi1.iteratorCurrentUser(mi1.user[loggedUser]);
 					
 					while(itTrips1.hasNext()) {
@@ -320,6 +321,7 @@ public class Main {
 							
 								
 							if(mi1.isTripScheduled(date, currentUser)) {
+			/*Organizar utilizadores antes de dar print*/
 								while(itTrips2.hasNext()) {
 									
 								InfoTrip currentTrip2 = itTrips2.nextTrip();
