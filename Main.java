@@ -252,7 +252,7 @@ public class Main {
 
 			if (mi1.isDataValid(date, time, freeSeats, duration)) {
 
-				if (!mi1.isTripScheduled(date, loggedUser)) {
+				if (!mi1.isTripScheduled(date, mi1.user[loggedUser])) {
 
 					mi1.scheduleTrip(origin, destination, date, time, freeSeats, duration, loggedUser);
 					System.out.println("Deslocacao registada. Obrigado " + mi1.user[loggedUser].getName() + ".");
@@ -288,18 +288,18 @@ public class Main {
 
 			if (date == "") {
 				
-				int counter = mi1.user[loggedUser].getCounterTrip();
+				int counterTrip1 = mi1.user[loggedUser].getCounterTrip();
 
-				if (counter > 0) {
-					Iterator it1 = mi1.iteratorCurrentUser(loggedUser);
+				if (counterTrip1 > 0) {
+					Iterator itTrips1 = mi1.iteratorCurrentUser(mi1.user[loggedUser]);
 					
-					while(it1.hasNext()) {
-						InfoTrip currentTrip = it1.nextTrip();
+					while(itTrips1.hasNext()) {
+						InfoTrip currentTrip1 = itTrips1.nextTrip();
 						
-						System.out.println(currentTrip.getOrigin());
-						System.out.println(currentTrip.getDestination());
-						System.out.println(currentTrip.getDate() + " " + currentTrip.getHours() + " " + currentTrip.getDuration() + " " + currentTrip.getSeatsFree());
-						System.out.println("Boleias registadas: " + currentTrip.getOccupiedSeats());
+						System.out.println(currentTrip1.getOrigin());
+						System.out.println(currentTrip1.getDestination());
+						System.out.println(currentTrip1.getDate() + " " + currentTrip1.getHours() + " " + currentTrip1.getDuration() + " " + currentTrip1.getSeatsFree());
+						System.out.println("Boleias registadas: " + currentTrip1.getOccupiedSeats());
 					}
 					
 
@@ -310,15 +310,31 @@ public class Main {
 
 			}
 
-			else if (mi1.dateScheduledTrips(date, loggedUser) > 0) {
-
+			else if (date != "") {
+					Iterator itUsers = mi1.iteratorAllUsers();
 					
-					
-
+						while(itUsers.hasNext()) {
+							User currentUser = itUsers.nextUser();
+							
+							Iterator itTrips2 = mi1.iteratorCurrentUser(currentUser);
+							
+								
+							if(mi1.isTripScheduled(date, currentUser)) {
+								while(itTrips2.hasNext()) {
+									
+								InfoTrip currentTrip2 = itTrips2.nextTrip();
+							
+								System.out.println(currentUser.getEmail());
+								System.out.println(currentTrip2.getOrigin());
+								System.out.println(currentTrip2.getDestination());
+								System.out.println(currentTrip2.getDate() + " " + currentTrip2.getHours() + " " + currentTrip2.getDuration() + " " + currentTrip2.getSeatsFree());
+								System.out.println("Boleias registadas: " + currentTrip2.getOccupiedSeats());								
+								}
+							}
+							else
+								System.out.println(mi1.user[loggedUser].getName() + " nao tem deslocacoes registadas para " + date);
+						}
 				}
-
-				else
-					System.out.println(mi1.user[loggedUser].getName() + " nao tem deslocacoes registadas para " + date);
 
 		}
 	

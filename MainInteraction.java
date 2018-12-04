@@ -114,13 +114,13 @@ public class MainInteraction {
 		return counterUser == user.length;
 	}
 	
-	public boolean isTripScheduled(String date, int loggedUser) {
+	public boolean isTripScheduled(String date, User currentUser) {
 		
 		BasicDate bd = new BasicDate(date);
 		
-		InfoTrip temp[] = user[loggedUser].getTrip();
+		InfoTrip temp[] = currentUser.getTrip();
 		
-		int counter = user[loggedUser].getCounterTrip();
+		int counter = currentUser.getCounterTrip();
 		
 		Iterator it1 = new Iterator(temp, counter);
 		
@@ -175,17 +175,17 @@ public class MainInteraction {
 	
 	/* Se counter < 0 nao tera descolacoes registadas */
 	
-	public Iterator iteratorCurrentUser(int loggedUser) {
+	public Iterator iteratorCurrentUser(User currentUser) {
 		
-		int counter = user[loggedUser].getCounterTrip();
+		int counter = currentUser.getCounterTrip();
 		
-		Iterator it1 = new Iterator(user[loggedUser].getTrip(),counter);
+		Iterator it1 = new Iterator(currentUser.getTrip(),counter);
 		
 		return it1;
 		
 	}
 	
-	public Iterator iteratorAllUsers(String date) {
+	public Iterator iteratorAllUsers() {
 
 		Iterator it2 = new Iterator(user,counterUser);
 	
@@ -256,29 +256,8 @@ public class MainInteraction {
 		
 	}
 	
-	public int dateScheduledTrips(String date, int loggedUser) {
-		
-		int i = 0;
-		
-		int counter = user[i].getCounterTrip();
-		
-		Iterator it1 = new Iterator(user[i].getTrip(),counter);
-		
-		while(it1.hasNext()) {
-			
-			it1.nextTrip().getOrigin();
-			it1.nextTrip().getDestination();
-			it1.nextTrip().getDate();
-			it1.nextTrip().getHours();
-			it1.nextTrip().getDuration();
-			it1.nextTrip().getSeatsFree();
-		
-			i++;
-			
-		}
-	
-		return i;
-		
+	public int getCounterUser() {
+		return counterUser;
 	}
 
 }
