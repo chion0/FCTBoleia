@@ -278,19 +278,26 @@ public class Main {
 
 	}
 
-	/* Lista todas ou algumas deslocacoes registadas: */
+	/** Lista todas ou algumas deslocacoes registadas: 
+	 * 
+	 * @param in
+	 * @param mi1
+	 * 
+	 */
 
 	private static void processLista(Scanner in, MainInteraction mi1) {
 
 		if (isSessionActive()) {
 
-			String date = in.next();
+			String date = in.nextLine();
 
-			if (date == "") {
+			if (date.isEmpty()) {
 				
 				int counterTrip1 = mi1.user[loggedUser].getCounterTrip();
 
 				if (counterTrip1 > 0) {
+
+					mi1.orderDate(mi1.user[loggedUser]);
 					
 					Iterator itTrips1 = mi1.iteratorCurrentUser(mi1.user[loggedUser]);
 					
@@ -299,7 +306,7 @@ public class Main {
 						
 						System.out.println(currentTrip1.getOrigin());
 						System.out.println(currentTrip1.getDestination());
-						System.out.println(currentTrip1.getDate() + " " + currentTrip1.getHours() + " " + currentTrip1.getDuration() + " " + currentTrip1.getSeatsFree());
+						System.out.println(currentTrip1.getDate().getDay() + "-" + currentTrip1.getDate().getMonth() + "-" + currentTrip1.getDate().getYear() + " " + currentTrip1.getHours() + " " + currentTrip1.getDuration() + " " + currentTrip1.getSeatsFree());
 						System.out.println("Boleias registadas: " + currentTrip1.getOccupiedSeats());
 					}
 					
@@ -311,8 +318,9 @@ public class Main {
 
 			}
 
-			else if (date != "") {
+			else if (!date.isEmpty()) {
 					Iterator itUsers = mi1.iteratorAllUsers();
+					boolean noUserTrips = true;
 					
 						while(itUsers.hasNext()) {
 							User currentUser = itUsers.nextUser();
@@ -321,21 +329,27 @@ public class Main {
 							
 								
 							if(mi1.isTripScheduled(date, currentUser)) {
-			/*Organizar utilizadores antes de dar print*/
+								
+								mi1.orderEmail();
+								
+								currentUser.getEmail();
+								
 								while(itTrips2.hasNext()) {
 									
 								InfoTrip currentTrip2 = itTrips2.nextTrip();
+								
+								noUserTrips = false;
 							
 								System.out.println(currentUser.getEmail());
 								System.out.println(currentTrip2.getOrigin());
 								System.out.println(currentTrip2.getDestination());
-								System.out.println(currentTrip2.getDate() + " " + currentTrip2.getHours() + " " + currentTrip2.getDuration() + " " + currentTrip2.getSeatsFree());
+								System.out.println(currentTrip2.getDate().getDay() + "-" + currentTrip2.getDate().getMonth() + "-" + currentTrip2.getDate().getYear() + " " + currentTrip2.getHours() + " " + currentTrip2.getDuration() + " " + currentTrip2.getSeatsFree());
 								System.out.println("Boleias registadas: " + currentTrip2.getOccupiedSeats());								
 								}
 							}
-							else
-								System.out.println(mi1.user[loggedUser].getName() + " nao tem deslocacoes registadas para " + date);
 						}
+						if(noUserTrips)
+					System.out.println(mi1.user[loggedUser].getName() + " nao tem deslocacoes registadas para " + date);	
 				}
 
 		}
@@ -365,19 +379,25 @@ public class Main {
 			
 			User currentUser = itUsers.nextUser();
 			
-			if(!mi1.isValid(date)) {
-				
-				System.out.println("Data invalida.");
-				
-			}
+			int i = 0;
 			
-			if(itUsers.hasNext()) {
-				while(itUsers.hasNext()) {
+			if(i <= mi1.user.length) {
+				while(i < mi1.user.length) {
+					
+					if(!mi1.isValid(date)) {
+						
+						System.out.println("Data invalida.");
+						break;
+						
+					}
 				
 					if(!currentUser.getEmail().equals(email)) {
-					currentUser = itUsers.nextUser();
-						break;
-		
+						currentUser = itUsers.nextUser();
+						i++;
+					}
+						
+					else {
+							break;
 				}
 			}
 		}
@@ -390,6 +410,12 @@ public class Main {
 					Iterator itTrips = mi1.iteratorCurrentUser(currentUser);
 					
 					while(itTrips.hasNext()) {
+						
+						if(!mi1.isValid(date)) {
+							
+							System.out.println("Data invalida.");
+							break;
+						}
 					
 						InfoTrip currentTrip = itTrips.nextTrip();
 						
@@ -463,17 +489,24 @@ public class Main {
 	
 	/** Retira uma dada deslocacao: */
 
-	private static void processRemove(Scanner in) {
+	private static void processRemove(Scanner in,MainInteraction mi1) {
 
 		if (isSessionActive()) {
-
+			String dateToRemove = in.next();
+			User user = mi1.user[loggedUser];
+			Iterator itLoggedUserTrips = mi1.iteratorCurrentUser(user);
+			
+			while(itLoggedUserTrips.hasNext()) {
+				if(mi1.isTripScheduled(dateToRemove, user)) {
+					
+				}
+			}
 		}
 
 		else
 			unknownCommand();
 
 	}
-
 	private static String readOption(Scanner in, MainInteraction mi1) {
 
 		changePrompt(mi1);
@@ -520,14 +553,16 @@ public class Main {
 				processNova(in, mi1);
 				break;
 
-			// case LISTA: processLista();
-			// break;
+			case LISTA: 
+				processLista(in, mi1);
+				break;
 
 			// case BOLEIA: processBoleia();
 			// break;
 
-			// case CONSULTA: processConsulta();
-			// break;
+			case CONSULTA: 
+				processConsulta(in, mi1);
+				break;
 
 			// case REMOVE: processRemove();
 			// break;

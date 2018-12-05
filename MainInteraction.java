@@ -1,3 +1,5 @@
+import java.nio.file.attribute.UserPrincipalLookupService;
+
 public class MainInteraction {
 	
 	/* Constantes */
@@ -192,13 +194,7 @@ public class MainInteraction {
 		return it2;
 	}
 	
-	// Metodo testado - falta fazer a ordenacao
-	
-	public boolean isDateInferior(String date1,String date2) {
-		
-		BasicDate bd1 = new BasicDate(date1);
-		
-		BasicDate bd2 = new BasicDate(date2);
+	public boolean isDateInferior(BasicDate bd1,BasicDate bd2) {
 
 		boolean result = false;
 		
@@ -236,18 +232,43 @@ public class MainInteraction {
 		
 		InfoTrip[] v = currentUser.trip;
 		
-		BasicDate bd1 = new BasicDate(currentUser.getTrip()); // Obter uma data
-		
-		BasicDate bd2 = new BasicDate(); // Obter uma data
-		
-		for(int i = 0; i < counter - 1; i++) {
+		for(int i = 0; i < counter; i++) {
 			for(int j = counter - 1; j > i; j--) {
 				
-				
+				if(!isDateInferior(v[j-1].getDate(),v[j].getDate())) {
+					
+					 InfoTrip temp = v[j-1];
+					 
+					 v[j-1] = v[j];
+					 
+					 v[j] = temp;
+					
+				}
 				
 			}
 		
 		}
+	}
+	
+	public void orderEmail() {	
+		
+		for(int i = 0; i < getCounterUser(); i++) {
+			for(int j = getCounterUser() - 1; j > i; j--) {
+				
+				if(user[j-1].getEmail().compareTo(user[j].getEmail()) > 0) {
+					
+					 User temp = user[j-1];
+					 
+					 user[j-1] = user[j];
+					 
+					 user[j] = temp;
+					 
+				}
+				
+				}
+			
+			}
+		
 	}
 	
 	
@@ -255,11 +276,13 @@ public class MainInteraction {
 		return counterUser;
 	}
 	
-	public BasicDate createDate(String date) {
+	public boolean compareDate(String date, User currentUser) {
 		
 		BasicDate bd1 = new BasicDate(date);
 		
-		return date;
+		iteratorCurrentUser(currentUser);
+		
+		
 		
 	}
 
