@@ -74,9 +74,11 @@ public class User {
 			temp[i] = trip[i];
 		
 		trip = temp;
-	}	
+		
+	}
 	
 	public void newTrip(String origin, String destination, String date, int time, int freeSeats, float duration) {
 		trip[counterTrip++] = new InfoTrip(origin, destination, date, time, freeSeats, duration);
 	}
+	
 }

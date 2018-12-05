@@ -12,6 +12,8 @@ public class InfoTrip {
 
 	public int seatsFree;
 	
+	public int occupiedSeats;
+	
 	public float duration;
 	
 	/** Construtor:
@@ -32,6 +34,8 @@ public class InfoTrip {
 		this.origin = origin;
 		
 		this.destination = destination;
+		
+		occupiedSeats = 0;
 		
 		this.date = Bd1;
 		
@@ -63,6 +67,10 @@ public class InfoTrip {
 	
 	public int getSeatsFree() {
 		return seatsFree;
+	}
+	
+	public int getOccupiedSeats() {
+		return occupiedSeats;
 	}
 	
 	public float getDuration() {

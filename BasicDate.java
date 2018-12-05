@@ -18,7 +18,7 @@ public class BasicDate {
 		}
 
 	}
-	
+
 	private boolean isDayValid() {
 		
 		// Ano bissexto
@@ -48,7 +48,7 @@ public class BasicDate {
 				return result;
 				
 	}
-
+	
 	public boolean isValid() {
 		
 		boolean isMonthValid = false, result = false;
