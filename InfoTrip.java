@@ -4,20 +4,22 @@ public class InfoTrip {
 	
 	public String origin;
 
-	public String destiny;
+	public String destination;
 
-	public String date;
+	public BasicDate date;
 	
 	public int hours;
 
 	public int seatsFree;
+	
+	public int occupiedSeats;
 	
 	public float duration;
 	
 	/** Construtor:
 	 * 
 	 * @param origin
-	 * @param destiny
+	 * @param destination
 	 * @param date
 	 * @param hours
 	 * @param seatsFree
@@ -25,13 +27,17 @@ public class InfoTrip {
 	 * 
 	 */
 	
-	public InfoTrip(String origin, String destiny, String date, int hours, int seatsFree, float duration) {
+	public InfoTrip(String origin, String destination, String date, int hours, int seatsFree, float duration) {
+		
+		BasicDate Bd1 = new BasicDate(date);
 		
 		this.origin = origin;
 		
-		this.destiny = destiny;
+		this.destination = destination;
 		
-		this.date = date;
+		occupiedSeats = 0;
+		
+		this.date = Bd1;
 		
 		this.hours = hours;
 		
@@ -47,11 +53,11 @@ public class InfoTrip {
 		return origin;
 	}
 	
-	public String getDestiny() {
-		return destiny;
+	public String getDestination() {
+		return destination;
 	}
 	
-	public String getDate() {
+	public BasicDate getDate() {
 		return date;
 	}
 	
@@ -61,6 +67,10 @@ public class InfoTrip {
 	
 	public int getSeatsFree() {
 		return seatsFree;
+	}
+	
+	public int getOccupiedSeats() {
+		return occupiedSeats;
 	}
 	
 	public float getDuration() {

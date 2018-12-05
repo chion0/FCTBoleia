@@ -4,7 +4,7 @@ public class MainInteraction {
 	
 	public static final int GROWTH = 2, CAP_MAX = 5;
 	
-	public static final int CAP_MAX_NUMBERS = 10, CAP_MAX_ALPHABET = 26;
+	public static final int CAP_MAX_POSSIBLE_CHAR = 36;
 	
 	/* Vetor de objetos */
 	
@@ -12,9 +12,7 @@ public class MainInteraction {
 	
 	/* Vetores */
 	
-	public String []alphabet = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"};
-	
-	public int []numbers = {0,1,2,3,4,5,6,7,8,9};
+	public String possibleCharacters = "abcdefghijklmnopqrstuvwxyz0123456789";
 	
 	/* Variavel de instancia */
 	
@@ -26,16 +24,22 @@ public class MainInteraction {
 		
 		user = new User[CAP_MAX];
 		
-		alphabet = new String[CAP_MAX_ALPHABET];
-		
-		numbers = new int[CAP_MAX_NUMBERS];
-		
 		counterUser = 0;
 		
 	}
 
 	/* Corpo da classe */
 	
+	public InfoTrip[] getTrip(User u1) {		
+		return u1.trip;	
+	}
+	
+	public User newUser(String email, String name, String password) {
+		
+		return new User(email, name, password);
+		
+	}
+		
 	public String getUserEmail(User u1) {
 		return u1.getEmail();
 	}
@@ -48,7 +52,7 @@ public class MainInteraction {
 		
 		boolean found = false;
 		
-		while(i < counterUser && !found) {
+		while((i < counterUser) && (!found)) {
 			
 			if(user[i].getEmail().equals(email)) 
 				found = true;
@@ -60,53 +64,39 @@ public class MainInteraction {
 		if(found)
 			result = i;
 		
+		else
+			counterUser++;
+			
 		return result;
 		
 	}
 	
 	public int countChar(String password) {
-		
-		String temp = alphabet.toString();
-		
-		char[] alphabet = temp.toCharArray();
-		
+	    
 		int countChar = 0;
 		
-		int i; int j;
-		
-		for(i = 0; i < CAP_MAX_NUMBERS; i++) {
-			
-			for(j = 0; j < password.length(); j++) {
-				
-				if(password.charAt(j) == alphabet[i])
-					countChar++;
-
-			}
-		}
-		
-		return countChar;
-	}
-	
-	public int countNumbers(String password) {
-		
-		int countNumber = 0;
-		
-		int i; int j;
-		
-		for(i = 0; i < CAP_MAX_NUMBERS; i++) {
-			
-			for(j = 0; j < password.length(); j++) {
-				
-				Character c = password.charAt(j);
-				
-				if(Character.isDigit(c))
-					countNumber++;
-			}
-			
-		}
-		
-		return countNumber++;
-		
+	    for(int i = 0; i < password.length(); i++) {
+	        char c = Character.toLowerCase(password.charAt(i)); 
+	        
+	        int j = 0;
+	    
+	        while(j <= CAP_MAX_POSSIBLE_CHAR) {
+	        	
+	        	char b = possibleCharacters.charAt(j);
+	   	        
+		        if (c == b) { 
+		            countChar ++;	
+		            break;
+	        }
+		        
+		        else j++;
+		        
+	    }  
+	        
+	  }      
+	        
+	    return countChar;
+	    
 	}
 	
 	public void resizeUser() {
@@ -124,15 +114,160 @@ public class MainInteraction {
 		return counterUser == user.length;
 	}
 	
+	public boolean isTripScheduled(String date, User currentUser) {
+		
+		BasicDate bd = new BasicDate(date);
+		
+		InfoTrip temp[] = currentUser.getTrip();
+		
+		int counter = currentUser.getCounterTrip();
+		
+		Iterator it1 = new Iterator(temp, counter);
+		
+		boolean result = false;
+		
+		while(it1.hasNext()) {
+			
+			it1.reinitialize();
+			
+			InfoTrip trip = it1.nextTrip();
+			
+			if(bd.getDay() == trip.getDate().getDay()) {
+				
+				if(bd.getMonth() == trip.getDate().getMonth()) {
+					
+					if(bd.getYear() == trip.getDate().getYear()) {
+						
+						result = true;
+						
+						break;
+						
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+		return result;
+		
+	}
 	
-	public void nova(String origin, String destiny, String date, int hours, int seatsFree, float duration, User u1) {
+	public boolean isDataValid(String date, int time, int freeSeats, float duration) {
 		
-		TripsCollection t1 = new TripsCollection(u1);
+		BasicDate bd = new BasicDate(date);
+		boolean result = false;
 		
-		if(t1.isTripFull(u1))
-			t1.resizeTrip(u1);
+		if(bd.isValid() && 0 <= time && time <= 23 && 0 <= freeSeats && 0 < duration) {
+			result = true;
+		}
+		
+		return result;
+	}
+	
+	public void scheduleTrip(String origin, String destination, String date, int time, int freeSeats, float duration, int loggedUser) {
+		if(user[loggedUser].isTripFull())
+			user[loggedUser].resizeTrip();
+		
+		user[loggedUser].newTrip(origin, destination, date, time, freeSeats, duration);
+	}
+	
+	/* Se counter < 0 nao tera descolacoes registadas */
+	
+	public Iterator iteratorCurrentUser(User currentUser) {
+		
+		int counter = currentUser.getCounterTrip();
+		
+		Iterator it1 = new Iterator(currentUser.getTrip(),counter);
+		
+		return it1;
+		
+	}
+	
+	public Iterator iteratorAllUsers() {
 
-		u1.trip[t1.counterTrip++] = new InfoTrip(origin, destiny, date, hours, seatsFree, duration);
+		Iterator it2 = new Iterator(user,counterUser);
+	
+		return it2;
+	}
+	
+	// Metodo testado - falta fazer a ordenacao
+	
+	public boolean isDateInferior(String date1,String date2) {
+		
+		BasicDate bd1 = new BasicDate(date1);
+		
+		BasicDate bd2 = new BasicDate(date2);
+
+		boolean result = false;
+		
+		if(bd1.getYear() < bd2.getYear()) {
+			return result = true;
+		}
+		
+		else if(bd1.getYear() > bd2.getYear()) {
+			return result = false;
+		}
+		
+			else if(bd1.getMonth() < bd2.getMonth()) {
+				return result = true;
+			}
+		
+			else if(bd1.getMonth() > bd2.getMonth()) {
+				return result = false;
+			}
+		
+				else if(bd1.getDay() < bd2.getDay()) {
+					return result = true;
+				}
+		
+				else if(bd1.getDay() > bd2.getDay()) {
+					return result = false;
+				}
+		
+		return result;
+		
+	}
+
+	public void orderDate(User currentUser) {
+		
+		int counter = currentUser.getCounterTrip();
+		
+		InfoTrip[] v = currentUser.trip;
+		
+		BasicDate bd1 = new BasicDate(currentUser.getTrip()); // Obter uma data
+		
+		BasicDate bd2 = new BasicDate(); // Obter uma data
+		
+		for(int i = 0; i < counter - 1; i++) {
+			for(int j = counter - 1; j > i; j--) {
+				
+				
+				
+			}
+		
+		}
+	}
+	
+	
+	public int getCounterUser() {
+		return counterUser;
+	}
+	
+	public BasicDate createDate(String date) {
+		
+		BasicDate bd1 = new BasicDate(date);
+		
+		return date;
+		
+	}
+
+	public boolean isValid(String date) {
+		
+		BasicDate bd1 = new BasicDate(date);
+		
+		return bd1.isValid();
 		
 	}
 	

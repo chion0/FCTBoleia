@@ -1,59 +1,68 @@
 import java.util.Scanner;
 
 public class Main {
-	
-	/*Constante*/
-	
+
+	/* Constante */
+
 	private static final String AJUDA = "ajuda", TERMINA = "termina", REGISTA = "regista", ENTRADA = "entrada";
-	private static final String SAI = "sai", NOVA = "nova", LISTA = "lista", BOLEIA = "boleia", CONSULTA = "consulta", REMOVE = "remove";
-	
+	private static final String SAI = "sai", NOVA = "nova", LISTA = "lista", BOLEIA = "boleia", CONSULTA = "consulta",
+			REMOVE = "remove";
+
 	private static String prompt = "> ";
-	
-	/*Variaveis de Instancia*/
-	
+
+	private static final int MAX_TRIES = 3;
+
+	private static final int MIN_LENGTH = 3, MAX_LENGTH = 5;
+
+	/* Variaveis de Instancia */
+
+	private static int loggedUser;
 	private static boolean termina = false;
-	
-		/*Corpo da Classe*/
-	
-	/*Metodos Auxiliares*/
+	private static SessionState St1;
+
+	/* Corpo da Classe */
+
+	/* Metodos Auxiliares */
 
 	private static boolean isSessionActive() {
-		SessionState St1 = new SessionState();
-				
-				boolean cond = false;
-		
-		if(St1.isSessionActive())
+
+		boolean cond = false;
+
+		if (St1.isSessionActive())
 			cond = true;
-		
+
 		return cond;
+
 	}
-	
-	private static void changePrompt() {
-		if(isSessionActive())
-			System.out.print(+ prompt);
-		
+
+	private static void changePrompt(MainInteraction mi1) {
+
+		if (isSessionActive())
+			System.out.print(mi1.user[loggedUser].getEmail() + prompt);
+
 		else
 			System.out.print(prompt);
-		
+
 	}
-	
+
 	private static void unknownCommand() {
 		System.out.println("Comando inexistente.");
 	}
-	
-	
-	/*Metodos Principais*/
-	
+
+	/* Metodos Principais */
+
 	/** Informa sobre os comandos disponiveis no programa */
-	
-	private static void processAjuda() {
-		if(!isSessionActive()) {
+
+	private static void processAjuda(MainInteraction mi1) {
+		if (!isSessionActive()) {
+
 			System.out.println("ajuda - Mostra os comandos existentes");
 			System.out.println("termina - Termina a execucao do programa");
 			System.out.println("regista - Regista um novo utilizador no programa");
-			System.out.println("entrada - Permite a entrada (�login�) dum utilizador no programa");
-		}
-		else {
+			System.out.println("Permite a entrada (\"login\") dum utilizador no programa");
+
+		} else {
+
 			System.out.println("ajuda - Mostra os comandos existentes");
 			System.out.println("sai - Termina a sessao deste utilizador no programa");
 			System.out.println("nova - Regista uma nova deslocacao");
@@ -61,252 +70,490 @@ public class Main {
 			System.out.println("boleia - Regista uma boleia para uma dada deslocacao");
 			System.out.println("consulta - Lista a informacao de uma dada deslocacao");
 			System.out.println("remove - Retira uma dada deslocacao");
+
 		}
 	}
-	
+
 	/** Termina a execucao do programa */
-	
+
 	private static void processTermina() {
-		
-		if(isSessionActive()) {
-			
+
+		if (!isSessionActive()) {
+
 			termina = true;
-			
+
 			System.out.println("Obrigado. Ate a proxima.");
-			
+
 		}
-		
-		else 
-		  unknownCommand();
-		
+
+		else
+			unknownCommand();
+
+	}
+
+	/**
+	 * Regista um novo utilizador no programa:
+	 * 
+	 * @param in
+	 * @param mi1
+	 * 
+	 */
+
+	private static void processRegista(Scanner in, MainInteraction mi1) {
+
+		if (mi1.isUserFull())
+			mi1.resizeUser();
+
+		if (!isSessionActive()) {
+
+			String email = in.next();
+
+			if (mi1.searchIndex(email) >= 0) {
+
+				System.out.println("Utilizador ja existente.");
+				System.out.println("Registo nao efetuado.");
+
+			}
+
+			else {
+				System.out.print("nome (maximo 50 caracteres): ");
+
+				String name = in.next();
+
+				int g = 0;
+
+				for (int i = 0; i < MAX_TRIES; i++) {
+
+					System.out.print("password (entre 3 e 5 caracteres - digitos e letras): ");
+
+					String password = in.next();
+
+					in.nextLine();
+
+					if (password.length() >= MIN_LENGTH && password.length() <= MAX_LENGTH
+							&& mi1.countChar(password) == password.length()) {
+
+						System.out.println("Registo efetuado.");
+
+						mi1.user[mi1.counterUser - 1] = mi1.newUser(email, name, password);
+
+						break;
+
+					}
+
+					else {
+
+						System.out.println("Password incorreta.");
+
+						g++;
+
+						if (g == 3)
+							System.out.println("Registo nao efetuado.");
+
+					}
+
+				}
+
+			}
+
+		}
+
+		else
+			unknownCommand();
+
+	}
+
+	/**
+	 * Permite a entrada ("login") dum utilizador no programa:
+	 * 
+	 * @param in
+	 * @param mi1
+	 * 
+	 */
+
+	private static void processEntrada(Scanner in, MainInteraction mi1) {
+
+		if (!isSessionActive()) {
+
+			String email = in.next();
+			in.nextLine();
+
+			if (mi1.searchIndex(email) >= 0) {
+				int user = mi1.searchIndex(email);
+
+				int tries = 0;
+
+				while (tries <= MAX_TRIES) {
+
+					System.out.print("password: ");
+
+					String password = in.next();
+					in.nextLine();
+
+					if (mi1.user[user].getPassword().equals(password)) {
+
+						loggedUser = user;
+						St1.sessionOn();
+						break;
+
+					}
+
+					else {
+						System.out.println("Password incorreta.");
+						tries++;
+					}
+				}
+			}
+
+			else
+				System.out.println("Utilizador nao existente.");
+		}
+
+		else
+			unknownCommand();
+
+	}
+
+	private static void processSai() {
+
+		if (isSessionActive()) {
+
+			St1.sessionOff();
+
+			System.out.println("Obrigado. Ate a proxima.");
+
+		}
+
+		else
+			unknownCommand();
+
+	}
+
+	/**
+	 * Regista uma nova descolacao:
+	 * 
+	 * @param in
+	 * @param mi1
+	 * 
+	 */
+
+	private static void processNova(Scanner in, MainInteraction mi1) {
+
+		if (isSessionActive()) {
+
+			in.nextLine();
+			String origin = in.nextLine();
+			String destination = in.nextLine();
+			String date = in.next();
+			int time = in.nextInt();
+			float duration = in.nextFloat();
+			int freeSeats = in.nextInt();
+			in.nextLine();
+
+			if (mi1.isDataValid(date, time, freeSeats, duration)) {
+
+				if (!mi1.isTripScheduled(date, mi1.user[loggedUser])) {
+
+					mi1.scheduleTrip(origin, destination, date, time, freeSeats, duration, loggedUser);
+					System.out.println("Deslocacao registada. Obrigado " + mi1.user[loggedUser].getName() + ".");
+				}
+
+				else {
+
+					System.out.println(mi1.user[loggedUser].getName() + " ja tem uma deslocacao registada nesta data.");
+					System.out.println("Deslocacao nao registada.");
+
+				}
+
+			}
+
+			else {
+				System.out.println("Dados invalidos.");
+				System.out.println("Deslocacao nao registada.");
+			}
+		}
+
+		else
+			unknownCommand();
+
+	}
+
+	/* Lista todas ou algumas deslocacoes registadas: */
+
+	private static void processLista(Scanner in, MainInteraction mi1) {
+
+		if (isSessionActive()) {
+
+			String date = in.next();
+
+			if (date == "") {
+				
+				int counterTrip1 = mi1.user[loggedUser].getCounterTrip();
+
+				if (counterTrip1 > 0) {
+					
+					Iterator itTrips1 = mi1.iteratorCurrentUser(mi1.user[loggedUser]);
+					
+					while(itTrips1.hasNext()) {
+						InfoTrip currentTrip1 = itTrips1.nextTrip();
+						
+						System.out.println(currentTrip1.getOrigin());
+						System.out.println(currentTrip1.getDestination());
+						System.out.println(currentTrip1.getDate() + " " + currentTrip1.getHours() + " " + currentTrip1.getDuration() + " " + currentTrip1.getSeatsFree());
+						System.out.println("Boleias registadas: " + currentTrip1.getOccupiedSeats());
+					}
+					
+
+				}
+
+				else
+					System.out.println(mi1.user[loggedUser].getName() + " nao tem deslocacoes registadas.");
+
+			}
+
+			else if (date != "") {
+					Iterator itUsers = mi1.iteratorAllUsers();
+					
+						while(itUsers.hasNext()) {
+							User currentUser = itUsers.nextUser();
+							
+							Iterator itTrips2 = mi1.iteratorCurrentUser(currentUser);
+							
+								
+							if(mi1.isTripScheduled(date, currentUser)) {
+			/*Organizar utilizadores antes de dar print*/
+								while(itTrips2.hasNext()) {
+									
+								InfoTrip currentTrip2 = itTrips2.nextTrip();
+							
+								System.out.println(currentUser.getEmail());
+								System.out.println(currentTrip2.getOrigin());
+								System.out.println(currentTrip2.getDestination());
+								System.out.println(currentTrip2.getDate() + " " + currentTrip2.getHours() + " " + currentTrip2.getDuration() + " " + currentTrip2.getSeatsFree());
+								System.out.println("Boleias registadas: " + currentTrip2.getOccupiedSeats());								
+								}
+							}
+							else
+								System.out.println(mi1.user[loggedUser].getName() + " nao tem deslocacoes registadas para " + date);
+						}
+				}
+
+		}
+	
+
+		else
+			unknownCommand();
+
 	}
 	
-	/** Regista um novo utilizador no programa:
+	/** Lista a informacao de uma dada deslocacao: 
 	 * 
-	 * @param email
+	 * @param in
+	 * @param mi1
 	 * 
 	 */
 	
-	private static void processRegista(Scanner in, MainInteraction mi1, User u1) {
-		
-		if(!isSessionActive()) {
+	private static void processConsulta(Scanner in, MainInteraction mi1) {
+
+		if (isSessionActive()) {
 			
-			u1.email = in.next();
+			String email = in.next();
+
+			String date = in.nextLine();
 			
-			if(mi1.searchIndex(u1.email) >= 0) {
+			Iterator itUsers = mi1.iteratorAllUsers();
+			
+			User currentUser = itUsers.nextUser();
+			
+			if(!mi1.isValid(date)) {
 				
-				System.out.println("Utilizador ja existente.");
-				System.out.println("Registo nao efetuado.");
+				System.out.println("Data invalida.");
 				
 			}
+			
+			if(itUsers.hasNext()) {
+				while(itUsers.hasNext()) {
 				
+					if(!currentUser.getEmail().equals(email)) {
+					currentUser = itUsers.nextUser();
+						break;
+		
+				}
+			}
+		}
 			else {
+				System.out.println("Utilizador nao existente.");
+			}
+			
+			if(mi1.isTripScheduled(date, currentUser)) {
 					
-					String nome = in.next();
+					Iterator itTrips = mi1.iteratorCurrentUser(currentUser);
 					
-					System.out.println("nome (maximo 50 caracteres):" + nome);
+					while(itTrips.hasNext()) {
 					
-					String password = in.next();
-					
-					if(password.length() >= 3 && password.length() <= 5 && mi1.countChar(password) > 0 && mi1.countNumbers(password) > 0) {
+						InfoTrip currentTrip = itTrips.nextTrip();
 						
-						System.out.println("Registo efetuado.");
+						if(!currentTrip.getDate().equals(date)) {
+							currentTrip = itTrips.nextTrip();
+							break;
+						}
+						
+						else {
+							
+							System.out.println(currentTrip.getOrigin());
+							System.out.println(currentTrip.getDestination());
+							System.out.println(currentTrip.getDate() + " " + currentTrip.getHours() + " " + currentTrip.getDuration() + " " + currentTrip.getSeatsFree());
+							
+						}
+						
+				}
+			}
+					
+					else  { 
+						
+						System.out.println("Deslocacao nao existe.");
 						
 					}
 					
-					else
-						System.out.println("Password incorreta.");
-					
 				}
-		
-		}
-		
-		else
-			unknownCommand();
-					
-		
-	}
+				
+			}
 	
-	/** Permite a entrada ("login") dum utilizador no programa:
-	 * 
-	 * @param email
-	 * @param in
-	 * 
-	 */
-	
-	private static void processEntrada(String email, String nome, String password, Scanner in, MainInteraction mi1) {
-		
-		if(!isSessionActive()) {
+
+	/** Regista uma boleia para uma dada deslocacao: */
+
+	private static void processBoleia(Scanner in, MainInteraction mi1) {
+
+		if (isSessionActive()) {
 			
+			String email = in.next();
+			
+			String date = in.nextLine();
+			
+			if(mi1.isTripScheduled(date, currentUser)) {
+				
+				
 				
 			}
 			
-		
-		else {
+			else if(mi1.isTripScheduled(date, currentUser) && mi1.)) {
+				
+				
+				
+			}
 			
+			else if(/* deslocacao foi registada pelo proprio utilizador */) {
+				
+				
+				
+			}
 			
-			
+
+
 		}
-		
-	}
-	
-	private static void processSai() {
-		
-		
-		
-	}
-	
-	/** Regista uma nova descolacao:
-	 * 
-	 * @param in
-	 * @param sessionState
-	 * 
-	 */
-	
-	private static void processNova(Scanner in) {
-		
-		if(isSessionActive()) {
-			
-			
-		}
-		
-		else {
-			
+
+		else
 			unknownCommand();
-			
+
+	} 
+
+
+	/** Lista a informacao de uma dada deslocacao: */
+
+	
+	/** Retira uma dada deslocacao: */
+
+	private static void processRemove(Scanner in) {
+
+		if (isSessionActive()) {
+
 		}
-		
-	}
-	
-	private static void processLista() {
-		
-		
-		
-		
-	}
-	
-	/** Lista a informacao de uma dada deslocacao:
-	 * 
-	 * @param email
-	 * @param date
-	 * 
-	 */
-	
-	private static void processConsulta(String email, String date) {
-		
-		if(isSessionActive()) {
-			
-		}
-		
-		else {
-			
+
+		else
 			unknownCommand();
-			
-		}
-		
+
 	}
-	
-	/** Regista uma boleia para uma dada deslocacao:
-	 * 
-	 * @param email
-	 * @param date
-	 * 
-	 */
-	
-	private static void processBoleia(String email, String date) {
-		
-		
-		
-	}
-	
-	/** Retira uma dada deslocacao:
-	 * 
-	 * @param date
-	 * @param sessionState
-	 * 
-	 */
-	
-	private static void processRemove(String date, boolean sessionState) {
-		
-		if(sessionState) {
-			
-			
-			
-		}
-		
-		else 
-		  unknownCommand();	
-		
-	}
-	
-	private static String readOption(Scanner in){
+
+	private static String readOption(Scanner in, MainInteraction mi1) {
+
+		changePrompt(mi1);
+
 		String opt = in.next().toLowerCase();
-		
+
 		return opt;
 	}
-	
+
 	private static void executeOption(String opt, MainInteraction mi1, Scanner in) {
-		if(!isSessionActive()) {
-			switch(opt) {
-			case AJUDA: processAjuda();
-			break;
-			
-			case TERMINA: processTermina();
-			break;
-			
-			case REGISTA: processRegista(in,mi1);
-			break;
-			
-		//	case ENTRADA: processEntrada();
-			break;
-			
-			default: unknownCommand();
-			break;
+		if (!isSessionActive()) {
+			switch (opt) {
+			case AJUDA:
+				processAjuda(mi1);
+				break;
+
+			case TERMINA:
+				processTermina();
+				break;
+
+			case REGISTA:
+				processRegista(in, mi1);
+				break;
+
+			case ENTRADA:
+				processEntrada(in, mi1);
+				break;
+
+			default:
+				unknownCommand();
+				break;
 			}
-		}
-		else{
-			switch(opt) {
-			case AJUDA: processAjuda();
-			break;
-			
-			case SAI: processSai();
-			break;
-			
-		//	case NOVA: processNova();
-			break;
-			
-			case LISTA: processLista();
-			break;
-			
-		//	case BOLEIA: processBoleia();
-			break;
-			
-		//	case CONSULTA: processConsulta();
-			break;
-			
-		//	case REMOVE: processRemove();
-			break;
-			
-			default: unknownCommand();
-			break;
+		} else {
+			switch (opt) {
+			case AJUDA:
+				processAjuda(mi1);
+				break;
+
+			case SAI:
+				processSai();
+				break;
+
+			case NOVA:
+				processNova(in, mi1);
+				break;
+
+			// case LISTA: processLista();
+			// break;
+
+			// case BOLEIA: processBoleia();
+			// break;
+
+			// case CONSULTA: processConsulta();
+			// break;
+
+			// case REMOVE: processRemove();
+			// break;
+
+			default:
+				unknownCommand();
+				break;
 			}
 		}
 	}
-			
+
 	public static void main(String[] args) {
-	
+
 		Scanner in = new Scanner(System.in);
-		
+
+		St1 = new SessionState();
+
 		MainInteraction mi1 = new MainInteraction();
-		
+
 		String opt = "";
-		
+
 		do {
-			opt = readOption(in);
-			
-	//		executeOption(opt);
-		}
-		while(!termina);
+			opt = readOption(in, mi1);
+
+			executeOption(opt, mi1, in);
+		} while (!termina);
 	}
 
 }
