@@ -30,9 +30,9 @@ public class MainInteraction {
 
 	/* Corpo da classe */
 	
-	public InfoTrip[] getTrip(User u1) {		
+	/*public InfoTrip[] getTrip(User u1) {		
 		return u1.trip;	
-	}
+	}*/
 	
 	public User newUser(String email, String name, String password) {
 		
@@ -40,9 +40,9 @@ public class MainInteraction {
 		
 	}
 		
-	public String getUserEmail(User u1) {
+	/*public String getUserEmail(User u1) {
 		return u1.getEmail();
-	}
+	}*/
 	
 	public int searchIndex(String email) {
 		
@@ -116,7 +116,7 @@ public class MainInteraction {
 	
 	public boolean isTripScheduled(String date, User currentUser) {
 		
-		BasicDate bd = new BasicDate(date);
+		BasicDate bd = convertDate(date);
 		
 		InfoTrip temp[] = currentUser.getTrip();
 		
@@ -156,7 +156,7 @@ public class MainInteraction {
 	
 	public boolean isDataValid(String date, int time, int freeSeats, float duration) {
 		
-		BasicDate bd = new BasicDate(date);
+		BasicDate bd = convertDate(date);
 		boolean result = false;
 		
 		if(bd.isValid() && 0 <= time && time <= 23 && 0 <= freeSeats && 0 < duration) {
@@ -192,72 +192,100 @@ public class MainInteraction {
 		return it2;
 	}
 	
-	private void orderDates(int loggedUser, String date) {
+	// Metodo testado - falta fazer a ordenacao
+	
+	public boolean isDateInferior(String date1,String date2) {
 		
-		BasicDate bd = new BasicDate(date);
+		BasicDate bd1 = convertDate(date1);
 		
-		int counter = user[loggedUser].getCounterTrip();
+		BasicDate bd2 = convertDate(date2);
+
+		boolean result = false;
 		
-		InfoTrip temp[] = user[loggedUser].getTrip();
-		
-		Iterator it1 = new Iterator(temp, counter);
-		
-		while(it1.hasNext()) {
-			
-			it1.reinitialize();
-			
-			InfoTrip trip = it1.nextTrip();
-			
-			if(bd.getYear() == trip.getDate().getYear()) {
-				
-				if(bd.getMonth() == trip.getDate().getMonth()) {
-					
-					if(bd.getDay() < trip.getDate().getDay()) {
-						
-						// Definir vetor temporario para dar storage aos valores de getDay()
-						
-					}
-					
-					else if(bd.getDay() > trip.getDate().getDay()) {
-						
-						// Same shit
-						
-					}
-					
-				}
-				
-				else if(bd.getMonth() < trip.getDate().getMonth()) {
-					
-					// Vetor temp
-					
-				}
-				
-				else if(bd.getMonth() > trip.getDate().getMonth()) {
-					
-					// Vetor temp
-					
-				}
-				
-			}
-			
-			else if(bd.getYear() < trip.getDate().getYear()) {
-				
-				// vetor temp
-				
-			}
-			
-			else if(bd.getYear() > trip.getDate().getYear()) {
-				
-				// Vetor temp
-				
-			}
-			
+		if(bd1.getYear() < bd2.getYear()) {
+			return result = true;
 		}
 		
+		else if(bd1.getYear() > bd2.getYear()) {
+			return result = false;
+		}
+		
+			else if(bd1.getMonth() < bd2.getMonth()) {
+				return result = true;
+			}
+		
+			else if(bd1.getMonth() > bd2.getMonth()) {
+				return result = false;
+			}
+		
+				else if(bd1.getDay() < bd2.getDay()) {
+					return result = true;
+				}
+		
+				else if(bd1.getDay() > bd2.getDay()) {
+					return result = false;
+				}
+		
+		return result;
+		
 	}
+
+	public void orderDate(User currentUser) {
+		
+		int counter = currentUser.getCounterTrip();
+		
+		InfoTrip[] v = currentUser.trip;
+		
+		BasicDate bd1 = new BasicDate(currentUser.getTrip()); // Obter uma data
+		
+		BasicDate bd2 = new BasicDate(); // Obter uma data
+		
+		for(int i = 0; i < counter - 1; i++) {
+			for(int j = counter - 1; j > i; j--) {
+				
+				
+				
+			}
+		
+		}
+	}
+	
 	
 	public int getCounterUser() {
 		return counterUser;
 	}
+	
+	public BasicDate convertDate(String date) {
+		
+		BasicDate bd1 = new BasicDate(date);
+		
+		return bd1;
+		
+	}
 
+	public boolean isValid(String date) {
+		
+		BasicDate bd1 = convertDate(date);
+		
+		return bd1.isValid();
+		
+	}
+	
+	public InfoTrip[] deleteTrip(BasicDate bd, User user) {
+		InfoTrip[] userTrips = user.getTrip(); 
+		int counterUserTrips = user.getCounterTrip();
+		int i = 0;
+		int result = -1;
+		
+		while(i < counterUser && result == -1) {
+			if(userTrips[i].getDate().equals(bd)) {
+				result = i;
+				userTrips[i] = userTrips[counterUserTrips - 1];
+				counterUserTrips--;
+			}
+			else i++;
+		}
+		
+		return userTrips;
+	}
 }
