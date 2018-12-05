@@ -62,7 +62,7 @@ public class BasicDate {
 		return result;
 		
 	}
-
+	
 	/**
 	 * Returns the year field of this date, assuming the string used
 	 * in the constructor was a valid date (i.e., isValid() ).
