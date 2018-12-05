@@ -419,7 +419,7 @@ public class Main {
 					
 						InfoTrip currentTrip = itTrips.nextTrip();
 						
-						if(!currentTrip.getDate().equals(date)) {
+						if(!currentTrip.getDate().equals(mi1.turnDateIntoBasicDate(date))) {
 							currentTrip = itTrips.nextTrip();
 							break;
 						}
@@ -435,14 +435,14 @@ public class Main {
 				}
 			}
 					
-					else  { 
+					else if(mi1.isValid(date)) { 
 						
 						System.out.println("Deslocacao nao existe.");
 						
 					}
 					
 				}
-				
+		
 			}
 	
 

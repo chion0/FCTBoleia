@@ -276,15 +276,12 @@ public class MainInteraction {
 		return counterUser;
 	}
 	
-	public boolean compareDate(String date, User currentUser) {
+	public BasicDate turnDateIntoBasicDate(String date) {
 		
 		BasicDate bd1 = new BasicDate(date);
+		return bd1;
 		
-		iteratorCurrentUser(currentUser);
-		
-		
-		
-	}
+}
 
 	public boolean isValid(String date) {
 		
