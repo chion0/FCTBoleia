@@ -1,20 +1,30 @@
+/**
+ * @author David Mira_d.mira
+ * @author Miguel Brites_m.brites
+ */
+
+
+/**
+*Class functionality description:
+*This class defines an object trip, used in other classes.
+*/
 public class InfoTrip {
 	
 	/* Variaveis de instancia */
 	
-	public String origin;
+	public String origin;//Stores the place of departure.
 
-	public String destination;
+	public String destination;//Stores the destination.
 
-	public BasicDate date;
+	public BasicDate date;//Stores the date in which the trip will occur.
 	
-	public int hours;
+	public int hours;//Stores the time at which the trip will occur.
 
-	public int seatsFree;
+	public int seatsFree;//Stores how many seats are free for use.
 	
-	public int occupiedSeats;
+	public int occupiedSeats;//Stores how many seats are occupied.
 	
-	public float duration;
+	public float duration;//Stores the duration of the trip.
 	
 	/** Construtor:
 	 * 
@@ -49,40 +59,40 @@ public class InfoTrip {
 	
 	/* Corpo da classe */
 	
-	public String getOrigin() {
+	public String getOrigin() {//Getter for the original location.
 		return origin;
 	}
 	
-	public String getDestination() {
+	public String getDestination() {//Getter for the destination.
 		return destination;
 	}
 	
-	public BasicDate getDate() {
+	public BasicDate getDate() {//Getter for the date of the trip.
 		return date;
 	}
 	
-	public int getHours() {
+	public int getHours() {//Getter for the time of departure.
 		return hours;
 	}
 	
-	public int getSeatsFree() {
+	public int getSeatsFree() {//Getter for how many seats are available for "boleias".
 		return seatsFree;
 	}
 	
-	public int getOccupiedSeats() {
+	public int getOccupiedSeats() {//Getter for how many occupied seats there are.
 		return occupiedSeats;
 	}
 
-	public int getUnoccupiedSeats() {
+	public int getUnoccupiedSeats() {//Getter for the calculation of how many unoccupied seats remain.
 		return (seatsFree - occupiedSeats);
 	}
 	
-	public float getDuration() {
+	public float getDuration() {//Getter for the duration of the trip.
 		return duration;
 	}
 	
 	
-	public int incOccupiedSeats() {
+	public int incOccupiedSeats() {//Increases the number of occupied seats.
 		occupiedSeats++;
 		
 		return occupiedSeats;
