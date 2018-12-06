@@ -29,7 +29,18 @@ public class BasicDate {
 						if(1 <= getDay() && getDay() <= 29) {
 							result = true;	
 						}
-					}	
+					}
+					
+					else if(getMonth() == 1 || getMonth() == 3 || getMonth() == 5 || getMonth() == 7 || getMonth() == 8 || getMonth() == 10 || getMonth() == 12) {
+						if(1 <= getDay() && getDay() <= 31)
+							result = true;
+					}
+					
+					else if(getMonth() == 4 || getMonth() == 6 || getMonth() == 9 || getMonth() == 11) {
+						if(1 <= getDay() && getDay() <= 30)
+							result = true;
+					}
+					
 				}
 				
 				else if(getMonth() == 2) {

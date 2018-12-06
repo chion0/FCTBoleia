@@ -62,6 +62,11 @@ public class User {
 		return counterTrip;
 	}
 	
+	public int decCounterTrip() {
+		return counterTrip--;
+		
+	}
+	
 	public boolean isTripFull() {
 		return counterTrip == trip.length;
 	}

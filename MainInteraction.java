@@ -1,5 +1,3 @@
-import java.nio.file.attribute.UserPrincipalLookupService;
-
 public class MainInteraction {
 	
 	/* Constantes */
@@ -128,10 +126,10 @@ public class MainInteraction {
 		
 		boolean result = false;
 		
+		it1.reinitialize();
+		
 		while(it1.hasNext()) {
-			
-			it1.reinitialize();
-			
+					
 			InfoTrip trip = it1.nextTrip();
 			
 			if(bd.getDay() == trip.getDate().getDay()) {
@@ -177,7 +175,7 @@ public class MainInteraction {
 	
 	/* Se counter < 0 nao tera descolacoes registadas */
 	
-	public Iterator iteratorCurrentUser(User currentUser) {
+	public Iterator iteratorUserTrips(User currentUser) {
 		
 		int counter = currentUser.getCounterTrip();
 		
@@ -187,7 +185,7 @@ public class MainInteraction {
 		
 	}
 	
-	public Iterator iteratorAllUsers() {
+	public Iterator iteratorUsers() {
 
 		Iterator it2 = new Iterator(user,counterUser);
 	
@@ -276,14 +274,21 @@ public class MainInteraction {
 		return counterUser;
 	}
 	
-	public BasicDate turnDateIntoBasicDate(String date) {
+	public BasicDate convertDate(String date) {
 		
 		BasicDate bd1 = new BasicDate(date);
 		return bd1;
 		
-}
+	}
+	
+	public String convertBasicDate(BasicDate bd) {
+		
+		String date = bd.getDay() + "-" + bd.getMonth() + "-" + bd.getYear();
+		
+		return date;
+	}
 
-	public boolean isValid(String date) {
+	public boolean isDateValid(String date) {
 		
 		BasicDate bd1 = new BasicDate(date);
 		
@@ -291,4 +296,31 @@ public class MainInteraction {
 		
 	}
 	
+	public InfoTrip[] deleteTrip(BasicDate bd, User user) {
+		InfoTrip[] userTrips = user.getTrip(); 
+		int counterUserTrips = user.getCounterTrip();
+		int i = 0;
+		int result = -1;
+		InfoTrip[] updatedUserTrips = this.user[searchIndex(user.getEmail())].getTrip();
+		
+		while(i < counterUser && result == -1) {
+			String date = convertBasicDate(bd);
+			String tripDate = convertBasicDate(userTrips[i].getDate());
+			
+			if(tripDate.equals(date)) {
+				result = i;
+				userTrips[i] = userTrips[counterUserTrips - 1];
+				counterUserTrips--;
+				updatedUserTrips = userTrips;
+				this.user[searchIndex(user.getEmail())].decCounterTrip();
+			}
+			else i++;
+		}
+		
+		return updatedUserTrips;
+	}
+
+	public void newBoleia(InfoTrip currentTrip) {
+		currentTrip.incOccupiedSeats();
+	}
 }

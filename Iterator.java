@@ -57,7 +57,7 @@ public class Iterator {
 	}
 
 	public void reinitialize() {	
-		counter = 0;
+		currentIndex = 0;
 	}
 	
 }
