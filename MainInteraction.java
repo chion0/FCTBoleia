@@ -1,5 +1,3 @@
-import java.nio.file.attribute.UserPrincipalLookupService;
-
 public class MainInteraction {
 	
 	/* Constantes */
@@ -128,10 +126,10 @@ public class MainInteraction {
 		
 		boolean result = false;
 		
+		it1.reinitialize();
+		
 		while(it1.hasNext()) {
-			
-			it1.reinitialize();
-			
+					
 			InfoTrip trip = it1.nextTrip();
 			
 			if(bd.getDay() == trip.getDate().getDay()) {
@@ -303,18 +301,26 @@ public class MainInteraction {
 		int counterUserTrips = user.getCounterTrip();
 		int i = 0;
 		int result = -1;
+		InfoTrip[] updatedUserTrips = this.user[searchIndex(user.getEmail())].getTrip();
 		
 		while(i < counterUser && result == -1) {
-			if(userTrips[i].getDate().equals(bd)) {
+			String date = convertBasicDate(bd);
+			String tripDate = convertBasicDate(userTrips[i].getDate());
+			
+			if(tripDate.equals(date)) {
 				result = i;
 				userTrips[i] = userTrips[counterUserTrips - 1];
 				counterUserTrips--;
+				updatedUserTrips = userTrips;
+				this.user[searchIndex(user.getEmail())].decCounterTrip();
 			}
 			else i++;
 		}
 		
-		return userTrips;
+		return updatedUserTrips;
 	}
 
-	
+	public void newBoleia(InfoTrip currentTrip) {
+		currentTrip.incOccupiedSeats();
+	}
 }

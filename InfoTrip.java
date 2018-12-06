@@ -72,9 +72,20 @@ public class InfoTrip {
 	public int getOccupiedSeats() {
 		return occupiedSeats;
 	}
+
+	public int getUnoccupiedSeats() {
+		return (seatsFree - occupiedSeats);
+	}
 	
 	public float getDuration() {
 		return duration;
+	}
+	
+	
+	public int incOccupiedSeats() {
+		occupiedSeats++;
+		
+		return occupiedSeats;
 	}
 	
 }

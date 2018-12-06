@@ -245,6 +245,7 @@ public class Main {
 			String origin = in.nextLine();
 			String destination = in.nextLine();
 			String date = in.next();
+			date = date.replaceAll("\\s+", "");
 			int time = in.nextInt();
 			float duration = in.nextFloat();
 			int freeSeats = in.nextInt();
@@ -290,6 +291,7 @@ public class Main {
 		if (isSessionActive()) {
 
 			String date = in.nextLine();
+			date = date.replaceAll("\\s+", "");
 
 			if (date.isEmpty()) {
 				
@@ -300,8 +302,11 @@ public class Main {
 					mi1.orderDate(mi1.user[loggedUser]);
 					
 					Iterator itTrips1 = mi1.iteratorUserTrips(mi1.user[loggedUser]);
+					itTrips1.reinitialize();
 					
 					while(itTrips1.hasNext()) {
+						
+						
 						InfoTrip currentTrip1 = itTrips1.nextTrip();
 						
 						System.out.println(currentTrip1.getOrigin());
@@ -320,6 +325,7 @@ public class Main {
 
 			else if (!date.isEmpty()) {
 					Iterator itUsers = mi1.iteratorUsers();
+					itUsers.reinitialize();
 					boolean noUserTrips = true;
 					
 						while(itUsers.hasNext()) {
@@ -327,7 +333,8 @@ public class Main {
 							
 							Iterator itTrips2 = mi1.iteratorUserTrips(currentUser);
 							
-								
+							itTrips2.reinitialize();
+							
 							if(mi1.isTripScheduled(date, currentUser)) {
 								
 								mi1.orderEmail();
@@ -337,20 +344,25 @@ public class Main {
 								while(itTrips2.hasNext()) {
 									
 								InfoTrip currentTrip2 = itTrips2.nextTrip();
+
+								String tripDate = mi1.convertBasicDate(currentTrip2.getDate());
 								
-								noUserTrips = false;
-							
-								System.out.println(currentUser.getEmail());
-								System.out.println(currentTrip2.getOrigin());
-								System.out.println(currentTrip2.getDestination());
-								System.out.println(mi1.convertBasicDate(currentTrip2.getDate()) + " " + currentTrip2.getHours() + " " + currentTrip2.getDuration() + " " + currentTrip2.getSeatsFree());
-								System.out.println("Boleias registadas: " + currentTrip2.getOccupiedSeats() + "\n");								
+								if(tripDate.equals(date)) {
+								
+									noUserTrips = false;
+								
+									System.out.println(currentUser.getEmail());
+									System.out.println(currentTrip2.getOrigin());
+									System.out.println(currentTrip2.getDestination());
+									System.out.println(mi1.convertBasicDate(currentTrip2.getDate()) + " " + currentTrip2.getHours() + " " + currentTrip2.getDuration() + " " + currentTrip2.getSeatsFree());
+									System.out.println("Boleias registadas: " + currentTrip2.getOccupiedSeats() + "\n");
 								}
 							}
 						}
-						if(noUserTrips)
-					System.out.println(mi1.user[loggedUser].getName() + " nao tem deslocacoes registadas para " + date);	
-				}
+					}
+					if(noUserTrips)
+						System.out.println(mi1.user[loggedUser].getName() + " nao tem deslocacoes registadas para " + date + ".");	
+			}
 
 		}
 	
@@ -373,8 +385,8 @@ public class Main {
 			
 			String email = in.next();
 
-			String date = in.next();
-			in.nextLine();
+			String date = in.nextLine();
+			date = date.replaceAll("\\s+", "");
 			
 			Iterator itUsers = mi1.iteratorUsers();
 			
@@ -382,7 +394,7 @@ public class Main {
 			
 			itUsers.reinitialize();
 			
-				while(itUsers.hasNext()) { // && !userExists) {
+				while(itUsers.hasNext() && !userExists) {
 					User currentUser = itUsers.nextUser();
 					
 					if(currentUser.getEmail().equals(email)) {
@@ -401,6 +413,8 @@ public class Main {
 							
 							while(itTrips.hasNext()) {
 								
+								itTrips.reinitialize();
+								
 								InfoTrip currentTrip = itTrips.nextTrip();
 								String tripDate = mi1.convertBasicDate(currentTrip.getDate());
 								
@@ -409,7 +423,7 @@ public class Main {
 									System.out.println(currentTrip.getOrigin());
 									System.out.println(currentTrip.getDestination());
 									System.out.println(mi1.convertBasicDate(currentTrip.getDate()) + " " + currentTrip.getHours() + " " + currentTrip.getDuration() + " " + currentTrip.getSeatsFree());
-									
+									System.out.println("Lugares vagos: " + currentTrip.getUnoccupiedSeats());
 								
 							}
 				
@@ -446,29 +460,58 @@ public class Main {
 			String email = in.next();
 			
 			String date = in.nextLine();
+			date = date.replaceAll("\\s+", "");
 			
-			if(mi1.isTripScheduled(date, currentUser)) {
+			Iterator itUsers = mi1.iteratorUsers();
+			
+			boolean userExists = false;
+			
+			if(!mi1.user[loggedUser].getEmail().equals(email)) {
 				
+				itUsers.reinitialize();
 				
-				
+				while(itUsers.hasNext() && !userExists) {
+					User currentUser = itUsers.nextUser();
+					
+					if(currentUser.getEmail().equals(email)) {
+						userExists = true;
+						
+						if(mi1.isDateValid(date)) {
+							if(mi1.isTripScheduled(date, currentUser)) {
+								Iterator itUserTrips = mi1.iteratorUserTrips(currentUser);
+								
+								itUserTrips.reinitialize();
+								
+								while(itUserTrips.hasNext()) {
+									InfoTrip currentTrip = itUserTrips.nextTrip();
+									String tripDate = mi1.convertBasicDate(currentTrip.getDate());
+									
+									if(currentTrip.getOccupiedSeats() < currentTrip.getSeatsFree()) {
+										if(tripDate.equals(date)) {
+											mi1.newBoleia(currentTrip);
+											
+											System.out.println("Boleia registada.");
+										}
+									}
+									else
+										System.out.println(currentUser.getName() + " nao existe lugar. Boleia nao registada.");
+								}
+							}
+							else
+								System.out.println("Deslocacao nao existe.");
+						}
+						else
+							System.out.println("Data invalida.");
+					}
+				}
+			
+				if(!userExists)
+					System.out.println("Utilizador inexistente.");				
 			}
-			
-			else if(mi1.isTripScheduled(date, currentUser) && mi1.)) {
-				
-				
-				
-			}
-			
-			else if(/* deslocacao foi registada pelo proprio utilizador */) {
-				
-				
-				
-			}
-			
-
+			else 
+				System.out.println(mi1.user[loggedUser].getName() + " nao pode dar boleia a si propria. Boleia nao registada.");
 
 		}
-
 		else
 			unknownCommand();
 
@@ -484,17 +527,23 @@ public class Main {
 
 		if (isSessionActive()) {
 			String dateToRemove = in.next();
+			dateToRemove = dateToRemove.replaceAll("\\s+", "");
 			if(mi1.isDateValid(dateToRemove)) {
 				BasicDate date = mi1.convertDate(dateToRemove);
 				User user = mi1.user[loggedUser];
 			
 				if(mi1.isTripScheduled(dateToRemove, user)) {
+					
 					Iterator itUserTrips = mi1.iteratorUserTrips(user);
+					
+					itUserTrips.reinitialize();
+					
 					while(itUserTrips.hasNext()){
 						InfoTrip currentTrip = itUserTrips.nextTrip();
 						String tripDate = mi1.convertBasicDate(currentTrip.getDate());
 						if(tripDate.equals(mi1.convertBasicDate(date)) && currentTrip.getOccupiedSeats() == 0) {
 							mi1.deleteTrip(date, user);
+							System.out.println("Deslocacao removida.");
 							break;
 						}
 						else {
@@ -564,15 +613,15 @@ public class Main {
 				processLista(in, mi1);
 				break;
 
-			// case BOLEIA: processBoleia();
-			// break;
+			case BOLEIA: processBoleia(in, mi1);
+			break;
 
 			case CONSULTA: 
 				processConsulta(in, mi1);
 				break;
 
-			// case REMOVE: processRemove();
-			// break;
+			case REMOVE: processRemove(in, mi1);
+			break;
 
 			default:
 				unknownCommand();
