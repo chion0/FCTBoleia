@@ -1,3 +1,5 @@
+import java.nio.file.attribute.UserPrincipalLookupService;
+
 public class MainInteraction {
 	
 	/* Constantes */
@@ -175,7 +177,7 @@ public class MainInteraction {
 	
 	/* Se counter < 0 nao tera descolacoes registadas */
 	
-	public Iterator iteratorCurrentUser(User currentUser) {
+	public Iterator iteratorUserTrips(User currentUser) {
 		
 		int counter = currentUser.getCounterTrip();
 		
@@ -185,20 +187,14 @@ public class MainInteraction {
 		
 	}
 	
-	public Iterator iteratorAllUsers() {
+	public Iterator iteratorUsers() {
 
 		Iterator it2 = new Iterator(user,counterUser);
 	
 		return it2;
 	}
 	
-	// Metodo testado - falta fazer a ordenacao
-	
-	public boolean isDateInferior(String date1,String date2) {
-		
-		BasicDate bd1 = new BasicDate(date1);
-		
-		BasicDate bd2 = new BasicDate(date2);
+	public boolean isDateInferior(BasicDate bd1,BasicDate bd2) {
 
 		boolean result = false;
 		
@@ -236,18 +232,43 @@ public class MainInteraction {
 		
 		InfoTrip[] v = currentUser.trip;
 		
-		BasicDate bd1 = new BasicDate(currentUser.getTrip()); // Obter uma data
-		
-		BasicDate bd2 = new BasicDate(); // Obter uma data
-		
-		for(int i = 0; i < counter - 1; i++) {
+		for(int i = 0; i < counter; i++) {
 			for(int j = counter - 1; j > i; j--) {
 				
-				
+				if(!isDateInferior(v[j-1].getDate(),v[j].getDate())) {
+					
+					 InfoTrip temp = v[j-1];
+					 
+					 v[j-1] = v[j];
+					 
+					 v[j] = temp;
+					
+				}
 				
 			}
 		
 		}
+	}
+	
+	public void orderEmail() {	
+		
+		for(int i = 0; i < getCounterUser(); i++) {
+			for(int j = getCounterUser() - 1; j > i; j--) {
+				
+				if(user[j-1].getEmail().compareTo(user[j].getEmail()) > 0) {
+					
+					 User temp = user[j-1];
+					 
+					 user[j-1] = user[j];
+					 
+					 user[j] = temp;
+					 
+				}
+				
+				}
+			
+			}
+		
 	}
 	
 	
@@ -255,20 +276,45 @@ public class MainInteraction {
 		return counterUser;
 	}
 	
-	public BasicDate createDate(String date) {
+	public BasicDate convertDate(String date) {
 		
 		BasicDate bd1 = new BasicDate(date);
-		
-		return date;
+		return bd1;
 		
 	}
+	
+	public String convertBasicDate(BasicDate bd) {
+		
+		String date = bd.getDay() + "-" + bd.getMonth() + "-" + bd.getYear();
+		
+		return date;
+	}
 
-	public boolean isValid(String date) {
+	public boolean isDateValid(String date) {
 		
 		BasicDate bd1 = new BasicDate(date);
 		
 		return bd1.isValid();
 		
 	}
+	
+	public InfoTrip[] deleteTrip(BasicDate bd, User user) {
+		InfoTrip[] userTrips = user.getTrip(); 
+		int counterUserTrips = user.getCounterTrip();
+		int i = 0;
+		int result = -1;
+		
+		while(i < counterUser && result == -1) {
+			if(userTrips[i].getDate().equals(bd)) {
+				result = i;
+				userTrips[i] = userTrips[counterUserTrips - 1];
+				counterUserTrips--;
+			}
+			else i++;
+		}
+		
+		return userTrips;
+	}
+
 	
 }
