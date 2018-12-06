@@ -4,7 +4,7 @@ public class MainInteraction {
 	
 	public static final int GROWTH = 2, CAP_MAX = 5;
 	
-	public static final int CAP_MAX_POSSIBLE_CHAR = 36;
+	public static final int CAP_MAX_POSSIBLE_CHAR = 35;
 	
 	/* Vetor de objetos */
 	
@@ -64,9 +64,6 @@ public class MainInteraction {
 		if(found)
 			result = i;
 		
-		else
-			counterUser++;
-			
 		return result;
 		
 	}
@@ -74,14 +71,14 @@ public class MainInteraction {
 	public int countChar(String password) {
 	    
 		int countChar = 0;
-		
+	
 	    for(int i = 0; i < password.length(); i++) {
 	        char c = Character.toLowerCase(password.charAt(i)); 
 	        
 	        int j = 0;
 	    
 	        while(j <= CAP_MAX_POSSIBLE_CHAR) {
-	        	
+
 	        	char b = possibleCharacters.charAt(j);
 	   	        
 		        if (c == b) { 
@@ -93,17 +90,24 @@ public class MainInteraction {
 		        
 	    }  
 	        
+	        if(j > CAP_MAX_POSSIBLE_CHAR) 
+	        	break;
+	        
 	  }      
 	        
 	    return countChar;
 	    
 	}
 	
+	public int incCounterUser() {
+		return counterUser++;
+	}
+	
 	public void resizeUser() {
 		
 		User[] temp = new User[(user.length * GROWTH)];
 		
-		for(int i = 0; i <= user.length; i++)
+		for(int i = 0; i < user.length; i++)
 			temp[i] = user[i];
 		
 		user = temp;

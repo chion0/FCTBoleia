@@ -134,7 +134,8 @@ public class Main {
 							&& mi1.countChar(password) == password.length()) {
 
 						System.out.println("Registo efetuado.");
-
+						
+						mi1.incCounterUser();
 						mi1.user[mi1.counterUser - 1] = mi1.newUser(email, name, password);
 
 						break;
@@ -596,6 +597,7 @@ public class Main {
 			default:
 				changePrompt(mi1);
 				unknownCommand();
+				in.nextLine();
 				break;
 			}
 		} else {
@@ -638,6 +640,7 @@ public class Main {
 			default:
 				changePrompt(mi1);
 				unknownCommand();
+				in.nextLine();
 				break;
 			}
 		}
@@ -658,6 +661,8 @@ public class Main {
 
 			executeOption(opt, mi1, in);
 		} while (!termina);
+		
+		in.close();
 	}
 
 }
