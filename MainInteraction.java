@@ -4,7 +4,7 @@ public class MainInteraction {
 	
 	public static final int GROWTH = 2, CAP_MAX = 5;
 	
-	public static final int CAP_MAX_POSSIBLE_CHAR = 36;
+	public static final int CAP_MAX_POSSIBLE_CHAR = 35;
 	
 	/* Vetor de objetos */
 	
@@ -30,19 +30,15 @@ public class MainInteraction {
 
 	/* Corpo da classe */
 	
-	/*public InfoTrip[] getTrip(User u1) {		
-		return u1.trip;	
-	}*/
-	
 	public User newUser(String email, String name, String password) {
 		
 		return new User(email, name, password);
 		
 	}
 		
-	/*public String getUserEmail(User u1) {
+	public String getUserEmail(User u1) {
 		return u1.getEmail();
-	}*/
+	}
 	
 	public int searchIndex(String email) {
 		
@@ -64,9 +60,6 @@ public class MainInteraction {
 		if(found)
 			result = i;
 		
-		else
-			counterUser++;
-			
 		return result;
 		
 	}
@@ -74,14 +67,14 @@ public class MainInteraction {
 	public int countChar(String password) {
 	    
 		int countChar = 0;
-		
+	
 	    for(int i = 0; i < password.length(); i++) {
 	        char c = Character.toLowerCase(password.charAt(i)); 
 	        
 	        int j = 0;
 	    
 	        while(j <= CAP_MAX_POSSIBLE_CHAR) {
-	        	
+
 	        	char b = possibleCharacters.charAt(j);
 	   	        
 		        if (c == b) { 
@@ -93,17 +86,24 @@ public class MainInteraction {
 		        
 	    }  
 	        
+	        if(j > CAP_MAX_POSSIBLE_CHAR) 
+	        	break;
+	        
 	  }      
 	        
 	    return countChar;
 	    
 	}
 	
+	public int incCounterUser() {
+		return counterUser++;
+	}
+	
 	public void resizeUser() {
 		
 		User[] temp = new User[(user.length * GROWTH)];
 		
-		for(int i = 0; i <= user.length; i++)
+		for(int i = 0; i < user.length; i++)
 			temp[i] = user[i];
 		
 		user = temp;
@@ -116,7 +116,7 @@ public class MainInteraction {
 	
 	public boolean isTripScheduled(String date, User currentUser) {
 		
-		BasicDate bd = convertDate(date);
+		BasicDate bd = new BasicDate(date);
 		
 		InfoTrip temp[] = currentUser.getTrip();
 		
@@ -126,10 +126,10 @@ public class MainInteraction {
 		
 		boolean result = false;
 		
+		it1.reinitialize();
+		
 		while(it1.hasNext()) {
-			
-			it1.reinitialize();
-			
+					
 			InfoTrip trip = it1.nextTrip();
 			
 			if(bd.getDay() == trip.getDate().getDay()) {
@@ -156,7 +156,7 @@ public class MainInteraction {
 	
 	public boolean isDataValid(String date, int time, int freeSeats, float duration) {
 		
-		BasicDate bd = convertDate(date);
+		BasicDate bd = new BasicDate(date);
 		boolean result = false;
 		
 		if(bd.isValid() && 0 <= time && time <= 23 && 0 <= freeSeats && 0 < duration) {
@@ -175,7 +175,7 @@ public class MainInteraction {
 	
 	/* Se counter < 0 nao tera descolacoes registadas */
 	
-	public Iterator iteratorCurrentUser(User currentUser) {
+	public Iterator iteratorUserTrips(User currentUser) {
 		
 		int counter = currentUser.getCounterTrip();
 		
@@ -185,20 +185,14 @@ public class MainInteraction {
 		
 	}
 	
-	public Iterator iteratorAllUsers() {
+	public Iterator iteratorUsers() {
 
 		Iterator it2 = new Iterator(user,counterUser);
 	
 		return it2;
 	}
 	
-	// Metodo testado - falta fazer a ordenacao
-	
-	public boolean isDateInferior(String date1,String date2) {
-		
-		BasicDate bd1 = convertDate(date1);
-		
-		BasicDate bd2 = convertDate(date2);
+	public boolean isDateInferior(BasicDate bd1,BasicDate bd2) {
 
 		boolean result = false;
 		
@@ -236,18 +230,43 @@ public class MainInteraction {
 		
 		InfoTrip[] v = currentUser.trip;
 		
-		BasicDate bd1 = new BasicDate(currentUser.getTrip()); // Obter uma data
-		
-		BasicDate bd2 = new BasicDate(); // Obter uma data
-		
-		for(int i = 0; i < counter - 1; i++) {
+		for(int i = 0; i < counter; i++) {
 			for(int j = counter - 1; j > i; j--) {
 				
-				
+				if(!isDateInferior(v[j-1].getDate(),v[j].getDate())) {
+					
+					 InfoTrip temp = v[j-1];
+					 
+					 v[j-1] = v[j];
+					 
+					 v[j] = temp;
+					
+				}
 				
 			}
 		
 		}
+	}
+	
+	public void orderEmail() {	
+		
+		for(int i = 0; i < getCounterUser(); i++) {
+			for(int j = getCounterUser() - 1; j > i; j--) {
+				
+				if(user[j-1].getEmail().compareTo(user[j].getEmail()) > 0) {
+					
+					 User temp = user[j-1];
+					 
+					 user[j-1] = user[j];
+					 
+					 user[j] = temp;
+					 
+				}
+				
+				}
+			
+			}
+		
 	}
 	
 	
@@ -258,14 +277,20 @@ public class MainInteraction {
 	public BasicDate convertDate(String date) {
 		
 		BasicDate bd1 = new BasicDate(date);
-		
 		return bd1;
 		
 	}
-
-	public boolean isValid(String date) {
+	
+	public String convertBasicDate(BasicDate bd) {
 		
-		BasicDate bd1 = convertDate(date);
+		String date = bd.getDay() + "-" + bd.getMonth() + "-" + bd.getYear();
+		
+		return date;
+	}
+
+	public boolean isDateValid(String date) {
+		
+		BasicDate bd1 = new BasicDate(date);
 		
 		return bd1.isValid();
 		
@@ -276,16 +301,26 @@ public class MainInteraction {
 		int counterUserTrips = user.getCounterTrip();
 		int i = 0;
 		int result = -1;
+		InfoTrip[] updatedUserTrips = this.user[searchIndex(user.getEmail())].getTrip();
 		
 		while(i < counterUser && result == -1) {
-			if(userTrips[i].getDate().equals(bd)) {
+			String date = convertBasicDate(bd);
+			String tripDate = convertBasicDate(userTrips[i].getDate());
+			
+			if(tripDate.equals(date)) {
 				result = i;
 				userTrips[i] = userTrips[counterUserTrips - 1];
 				counterUserTrips--;
+				updatedUserTrips = userTrips;
+				this.user[searchIndex(user.getEmail())].decCounterTrip();
 			}
 			else i++;
 		}
 		
-		return userTrips;
+		return updatedUserTrips;
+	}
+
+	public void newBoleia(InfoTrip currentTrip) {
+		currentTrip.incOccupiedSeats();
 	}
 }

@@ -62,6 +62,11 @@ public class User {
 		return counterTrip;
 	}
 	
+	public int decCounterTrip() {
+		return counterTrip--;
+		
+	}
+	
 	public boolean isTripFull() {
 		return counterTrip == trip.length;
 	}
@@ -70,7 +75,7 @@ public class User {
 		
 		InfoTrip[] temp = new InfoTrip[(trip.length * GROWTH)];
 		
-		for(int i = 0; i <= trip.length; i++)
+		for(int i = 0; i < trip.length; i++)
 			temp[i] = trip[i];
 		
 		trip = temp;
