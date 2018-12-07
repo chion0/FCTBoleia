@@ -450,53 +450,6 @@ public class Main {
 			}
 		}
 	}
-				
-				
-				/*if (currentUser.getEmail().equals(email)) {
-						
-						userExists = true;
-	
-					if (mi1.isTripScheduled(date, currentUser)) {
-						
-						Iterator itTrips = mi1.iteratorUserTrips(currentUser);
-						
-						itTrips.reinitialize();
-						
-						while (itTrips.hasNext()) {
-							
-							InfoTrip currentTrip = itTrips.nextTrip();
-							String tripDate = mi1.convertBasicDate(currentTrip.getDate());
-							
-							if (tripDate.equals(date)) {
-								
-								System.out.println(currentTrip.getOrigin());
-								System.out.println(currentTrip.getDestination());
-								System.out.println(
-										mi1.convertBasicDate(currentTrip.getDate()) + " " + currentTrip.getHours() + " "
-												+ currentTrip.getDuration() + " " + currentTrip.getSeatsFree());
-								System.out.println("Lugares vagos: " + currentTrip.getUnoccupiedSeats());
-								
-							}
-							
-						}
-			
-						if(!userExists)
-							System.out.println("Utilizador inexistente.");
-						
-								if (!mi1.isDateValid(date)) {
-									System.out.println("Data invalida.");
-									break;
-			
-								}
-	
-						
-	
-					}
-					else if(userExists) {
-						System.out.println("Deslocacao nao existe.");
-						break;
-					}
-				}	*/		
 
 	/** Regista uma boleia para uma dada deslocacao: */
 
@@ -511,9 +464,70 @@ public class Main {
 
 			Iterator itUsers = mi1.iteratorUsers();
 
-			boolean userExists = false;
+			boolean userFound = false;
+			
+			while(itUsers.hasNext() && !userFound) {
+				User currentUser = itUsers.nextUser();
+				
+				if(mi1.isTripScheduled(date, currentUser) && currentUser.getEmail().equals(email)) {
+					
+					Iterator itUserTrips = mi1.iteratorUserTrips(currentUser);
 
-			if (!mi1.user[loggedUser].getEmail().equals(email)) {
+					itUserTrips.reinitialize();
+
+					while (itUserTrips.hasNext()) {
+						InfoTrip currentTrip = itUserTrips.nextTrip();
+						String tripDate = mi1.convertBasicDate(currentTrip.getDate());
+					
+						if (currentTrip.getUnoccupiedSeats() > 0){
+						
+							if(!mi1.user[loggedUser].getEmail().equals(currentUser.getEmail())) {
+									
+									userFound = true;
+									
+									if (mi1.isDateValid(date)) {
+										
+										if (tripDate.equals(date)) {
+											
+											mi1.newBoleia(currentTrip);
+											System.out.println("Boleia registada.");
+										}
+									}
+									else {
+										System.out.println("Data invalida.");
+										break;
+									}
+							}
+							else if(mi1.user[loggedUser].getEmail().equals(currentUser.getEmail()) && currentUser.getEmail().equals(email)){
+								System.out.println(mi1.user[loggedUser].getName() + " nao pode dar boleia a si propria. Boleia nao registada.");
+								userFound = true;
+								break;
+							}
+							else if(!currentUser.getEmail().equals(email) && itUsers.hasNext()) {
+								break;
+							}
+							else if(!currentUser.getEmail().equals(email) && !itUsers.hasNext()) {
+								System.out.println("Utilizador inexistente.");
+								break;
+							}
+						}
+						else if(currentUser.getEmail().equals(email) && tripDate.equals(date)){
+							System.out.println(mi1.user[loggedUser].getName() + " nao existe lugar. Boleia nao registada.");
+							break;
+						}
+					}
+				}
+				else if(!itUsers.hasNext()) {
+					System.out.println("Deslocacao nao existe.");
+				}
+			}
+		}
+		else
+			unknownCommand();
+	}
+			
+	
+	/*if (!mi1.user[loggedUser].getEmail().equals(email)) {
 
 				itUsers.reinitialize();
 
@@ -536,32 +550,29 @@ public class Main {
 									if (currentTrip.getOccupiedSeats() < currentTrip.getSeatsFree()) {
 										if (tripDate.equals(date)) {
 											mi1.newBoleia(currentTrip);
-
 											System.out.println("Boleia registada.");
 										}
-									} else
-										System.out.println(
-												currentUser.getName() + " nao existe lugar. Boleia nao registada.");
+									} 
+									else
+										System.out.println(mi1.user[loggedUser].getName() + " nao existe lugar. Boleia nao registada.");
 								}
-							} else
+							}
+							else
 								System.out.println("Deslocacao nao existe.");
-						} else
+						}
+						else
 							System.out.println("Data invalida.");
 					}
 				}
 
 				if (!userExists)
 					System.out.println("Utilizador inexistente.");
-			} else
-				System.out.println(
-						mi1.user[loggedUser].getName() + " nao pode dar boleia a si propria. Boleia nao registada.");
-
-		} else
-			unknownCommand();
-
-	}
-
-	/** Lista a informacao de uma dada deslocacao: */
+			} 
+			else
+				System.out.println(mi1.user[loggedUser].getName() + " nao pode dar boleia a si propria. Boleia nao registada.");*/
+	
+	
+	
 
 	/** Retira uma dada deslocacao: */
 
