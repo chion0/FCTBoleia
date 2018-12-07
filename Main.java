@@ -479,11 +479,18 @@ public class Main {
 						System.out.println("Utilizador inexistente.");
 					}
 				}
-				else if(!itUsers.hasNext())
-					System.out.println("Deslocacao nao existe.");
+				else {
+					if(!itUsers.hasNext()) {
+						System.out.println("Deslocacao nao existe.");
+					}
+					else if(itUsers.hasNext() && currentUser.getEmail().equals(email)) {
+						System.out.println("Deslocacao nao existe.");
+						break;
+					}
+				}
 			}
 		}
-	}
+}
 
 	/** 
 	 * Registers a "boleia" on a specific trip, occupying a free seat:
