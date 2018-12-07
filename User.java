@@ -75,7 +75,7 @@ public class User {
 		
 		InfoTrip[] temp = new InfoTrip[(trip.length * GROWTH)];
 		
-		for(int i = 0; i <= trip.length; i++)
+		for(int i = 0; i < trip.length; i++)
 			temp[i] = trip[i];
 		
 		trip = temp;

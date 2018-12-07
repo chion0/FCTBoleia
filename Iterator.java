@@ -1,26 +1,14 @@
-/**
- * @author David Mira_d.mira
- * @author Miguel Brites_m.brites
- */
-
-/**
-*Class functionality description:
-*This class defines the iterators used for the object arrays.
-*It also defines the methods of a classical iterator class (hasNext() and next()).
-*/
-
 public class Iterator {
 	
 	/* Variaveis de instancia */
 	
-	private int counter, currentIndex;//Stores a counter that keeps track of an array's index -- counter.
-					  //Also stores the position (index) the iterator is at -- currentIndex.
+	private int counter, currentIndex;
 	
 	/* Vetores de objetos */
 	
-	public InfoTrip[] trip;//Creates an array of InfoTrip objects named trip. 
+	public InfoTrip[] trip;
 	
-	public User[] users;//Creates an array of User objects named users.
+	public User[] users;
 	
 	/** Construtor:
 	 *   
@@ -56,19 +44,19 @@ public class Iterator {
 		
 	}
 	
-	public boolean hasNext() {//Verifies if an array still has something stored.
+	public boolean hasNext() {
 		return currentIndex < counter;
 	}
 	
-	public InfoTrip nextTrip() {//Returns the trip object stored in the current position of the iterator.
+	public InfoTrip nextTrip() {
 		return trip[currentIndex++]; 
 	}
 	
-	public User nextUser() {//Returns the user object stored in the current position of the iterator.
+	public User nextUser() {
 		return users[currentIndex++]; 
 	}
 
-	public void reinitialize() {//Resets the position of the iterator.	
+	public void reinitialize() {	
 		currentIndex = 0;
 	}
 	
