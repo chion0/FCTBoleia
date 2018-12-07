@@ -30,10 +30,6 @@ public class MainInteraction {
 
 	/* Corpo da classe */
 	
-	public InfoTrip[] getTrip(User u1) {		
-		return u1.trip;	
-	}
-	
 	public User newUser(String email, String name, String password) {
 		
 		return new User(email, name, password);
