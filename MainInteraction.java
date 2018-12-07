@@ -10,13 +10,13 @@ public class MainInteraction {
 	
 	public User[] user;
 	
-	/* Vetores */
-	
 	public String possibleCharacters = "abcdefghijklmnopqrstuvwxyz0123456789";
 	
 	/* Variavel de instancia */
 	
 	public int counterUser;
+	
+	/* Corpo da classe */
 	
 	/* Construtor */
 	
@@ -27,22 +27,37 @@ public class MainInteraction {
 		counterUser = 0;
 		
 	}
-
-	/* Corpo da classe */
 	
-	public InfoTrip[] getTrip(User u1) {		
-		return u1.trip;	
-	}
+	/** Creates a new user and returns it 
+	 * 
+	 * @param email
+	 * @param name
+	 * @param password
+	 * @return
+	 */
 	
 	public User newUser(String email, String name, String password) {
 		
 		return new User(email, name, password);
 		
 	}
-		
+	
+	/** Getter for a certain user's email
+	 * 
+	 * @param u1
+	 * @return
+	 */
+	
 	public String getUserEmail(User u1) {
 		return u1.getEmail();
 	}
+	
+	/** Searches the users array for a user with a specific email
+	 * then returns that user's location on the array or -1 if the user doesn't exist.
+	 * 
+	 * @param email
+	 * @return
+	 */
 	
 	public int searchIndex(String email) {
 		
@@ -70,6 +85,12 @@ public class MainInteraction {
 		return result;
 		
 	}
+	
+	/** Counts how many valid characters are in the password and returns the amount 
+	 * 
+	 * @param password
+	 * @return
+	 */
 	
 	public int countChar(String password) {
 	    
@@ -99,6 +120,10 @@ public class MainInteraction {
 	    
 	}
 	
+	/** Resizes the users array
+	 *
+	 * @pre: isUserFull();
+	 */
 	public void resizeUser() {
 		
 		User[] temp = new User[(user.length * GROWTH)];
@@ -110,9 +135,21 @@ public class MainInteraction {
 		
 	}
 	
+	/** Checks if the user array is full, returns true if it is 
+	 * 
+	 * @return
+	 */
+	
 	public boolean isUserFull() {
 		return counterUser == user.length;
 	}
+	 /** Searches the trips array of a specific user and checks if there is a trip arranged for a specific date,
+	  * returns true if there is
+	  * 
+	  * @param date
+	  * @param currentUser
+	  * @return
+	  */
 	
 	public boolean isTripScheduled(String date, User currentUser) {
 		
@@ -154,6 +191,15 @@ public class MainInteraction {
 		
 	}
 	
+	/** Checks if the data introduced for a new trip is valid, returns true if it is 
+	 * 
+	 * @param date
+	 * @param time
+	 * @param freeSeats
+	 * @param duration
+	 * @return
+	 */
+	
 	public boolean isDataValid(String date, int time, int freeSeats, float duration) {
 		
 		BasicDate bd = new BasicDate(date);
@@ -166,14 +212,23 @@ public class MainInteraction {
 		return result;
 	}
 	
+	/** Creates a new trip and adds it to the logged in user's trips array:
+	 * 
+	 * @param origin
+	 * @param destination
+	 * @param date
+	 * @param time
+	 * @param freeSeats
+	 * @param duration
+	 * @param loggedUser
+	 */
+	
 	public void scheduleTrip(String origin, String destination, String date, int time, int freeSeats, float duration, int loggedUser) {
 		if(user[loggedUser].isTripFull())
 			user[loggedUser].resizeTrip();
 		
 		user[loggedUser].newTrip(origin, destination, date, time, freeSeats, duration);
 	}
-	
-	/* Se counter < 0 nao tera descolacoes registadas */
 	
 	public Iterator iteratorUserTrips(User currentUser) {
 		
@@ -185,12 +240,18 @@ public class MainInteraction {
 		
 	}
 	
+	/** Creates an iterator object for the users array
+	 * 
+	 * @return
+	 */
+	
 	public Iterator iteratorUsers() {
 
 		Iterator it2 = new Iterator(user,counterUser);
 	
 		return it2;
 	}
+	
 	
 	public boolean isDateInferior(BasicDate bd1,BasicDate bd2) {
 
