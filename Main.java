@@ -1,29 +1,44 @@
 import java.util.Scanner;
 
+/**
+ * @author David Mira_d.mira
+ * @author Miguel Brites_m.brites
+ */
+
+/**
+*Class functionality description:
+*This class interprets the user's commands, inputed on the console, and processes them through a series of methods
+*in order to return the correct answer, this answer is displayed on the console. 
+*/
+
 public class Main {
 
-	/* Constante */
+	/* Constantes */
 
+	//Defines the options the user can use. 
 	private static final String AJUDA = "ajuda", TERMINA = "termina", REGISTA = "regista", ENTRADA = "entrada";
 	private static final String SAI = "sai", NOVA = "nova", LISTA = "lista", BOLEIA = "boleia", CONSULTA = "consulta",
 			REMOVE = "remove";
 
-	private static String prompt = "> ";
 
+	//Defines the maximum number of tries that the user has to correctly insert the password.
 	private static final int MAX_TRIES = 2;
 
+	//Defines the minimum and maximum number of characters that the password can have.
 	private static final int MIN_LENGTH = 3, MAX_LENGTH = 5;
 
 	/* Variaveis de Instancia */
 
-	private static int loggedUser;
-	private static boolean termina = false;
-	private static SessionState St1;
+	private static String prompt = "> "; // Stores the initial prompt appearance.
+	private static int loggedUser;  //  Stores which user is logged in.
+	private static boolean termina = false; // Stores a boolean value that allows for the termination of the program's execution. 
+	private static SessionState St1; // Stores information about the state of the session (activated or deactivated). 
 
 	/* Corpo da Classe */
 
 	/* Metodos Auxiliares */
 
+	/** Determines if the session is active or not (if someone's logged in or not) */
 	private static boolean isSessionActive() {
 
 		boolean cond = false;
@@ -35,6 +50,7 @@ public class Main {
 
 	}
 
+	/** Changes the way the prompt is displayed according to who is logged in */
 	private static void changePrompt(MainInteraction mi1) {
 
 		if (isSessionActive())
@@ -45,13 +61,17 @@ public class Main {
 
 	}
 
+	/** Writes an error message */
 	private static void unknownCommand() {
 		System.out.println("Comando inexistente.");
 	}
 
 	/* Metodos Principais */
 
-	/** Informa sobre os comandos disponiveis no programa */
+	/** Gives information about every command available to the user at the time:
+	 *
+	 * @param: mi1
+	 */
 
 	private static void processAjuda(MainInteraction mi1) {
 		if (!isSessionActive()) {
@@ -74,7 +94,7 @@ public class Main {
 		}
 	}
 
-	/** Termina a execucao do programa */
+	/** Terminates the program, this method is only available if no one is logged in */
 
 	private static void processTermina() {
 
@@ -92,7 +112,7 @@ public class Main {
 	}
 
 	/**
-	 * Regista um novo utilizador no programa:
+	 * Signs up a new user:
 	 * 
 	 * @param in
 	 * @param mi1
@@ -164,8 +184,8 @@ public class Main {
 
 	}
 
-	/**
-	 * Permite a entrada ("login") dum utilizador no programa:
+	/** 
+	 * Allows the login of a user:
 	 * 
 	 * @param in
 	 * @param mi1
@@ -214,6 +234,8 @@ public class Main {
 
 	}
 
+	/** Signs off a user that is currently logged in */
+	
 	private static void processSai() {
 
 		if (isSessionActive()) {
@@ -230,7 +252,7 @@ public class Main {
 	}
 
 	/**
-	 * Regista uma nova descolacao:
+	 * Arranges a new trip with the provided data:
 	 * 
 	 * @param in
 	 * @param mi1
@@ -279,14 +301,14 @@ public class Main {
 
 	}
 
-	/**
-	 * Lista todas ou algumas deslocacoes registadas:
+	/** 
+	 * Lists all the trips the current user has arranged or all the trips some users have on a certain date, depends on the input: 
 	 * 
 	 * @param in
 	 * @param mi1
 	 * 
 	 */
-
+	
 	private static void processLista(Scanner in, MainInteraction mi1) {
 
 		if (isSessionActive()) {
@@ -328,7 +350,14 @@ public class Main {
 			}
 
 			else if (!date.isEmpty()) {
-				Iterator itUsers = mi1.iteratorUsers();
+				
+				MainInteraction mi2 = new MainInteraction();
+				
+				mi2.importUsers(mi1);
+				
+				mi2.orderEmail();		
+				
+				Iterator itUsers = mi2.iteratorUsers();
 				itUsers.reinitialize();
 				boolean noUserTrips = true;
 				
@@ -338,7 +367,7 @@ public class Main {
 
 				while (itUsers.hasNext()) {
 					
-					if(!mi1.isDateValid(date)) 	{
+					if(!mi2.isDateValid(date)) 	{
 						System.out.println("Data invalida.");	
 						break;
 						
@@ -346,16 +375,13 @@ public class Main {
 					
 					User currentUser = itUsers.nextUser();
 
-					Iterator itTrips2 = mi1.iteratorUserTrips(currentUser);
+					Iterator itTrips2 = mi2.iteratorUserTrips(currentUser);
 
 					itTrips2.reinitialize();
 
 					if (mi1.isTripScheduled(date, currentUser)) {
-
-						mi1.orderEmail();
-
-						currentUser.getEmail();
 						
+
 						/**
 			 			 * @pre: itTrips2.hasNext();
 			 			 */
@@ -374,26 +400,27 @@ public class Main {
 								System.out.println(currentTrip2.getOrigin());
 								System.out.println(currentTrip2.getDestination());
 								System.out.println(
-										mi1.convertBasicDate(currentTrip2.getDate()) + " " + currentTrip2.getHours()
+										mi2.convertBasicDate(currentTrip2.getDate()) + " " + currentTrip2.getHours()
 												+ " " + currentTrip2.getDuration() + " " + currentTrip2.getSeatsFree());
 								System.out.println("Boleias registadas: " + currentTrip2.getOccupiedSeats() + "\n");
 							}
 						}
 					}
 				}
-				if (noUserTrips && mi1.isDateValid(date))
+				if (noUserTrips && mi2.isDateValid(date))
 					System.out.println(
-							mi1.user[loggedUser].getName() + " nao tem deslocacoes registadas para " + date + ".");
+							mi1.user[loggedUser].getName() + " nao existem deslocacoes registadas para " + date + ".");
 			}
 
 		}
 
 		else
 			unknownCommand();
+
 	}
 
-	/**
-	 * Lista a informacao de uma dada deslocacao:
+	/** 
+	 * Lists the information about a specific trip the user has arranged on a specific date on the console: 
 	 * 
 	 * @param in
 	 * @param mi1
@@ -467,9 +494,15 @@ public class Main {
 				}
 			}
 		}
-	}
+}
 
-	/** Regista uma boleia para uma dada deslocacao: */
+	/** 
+	 * Registers a "boleia" on a specific trip, occupying a free seat:
+	 *
+	 * @param in
+	 * @param mi1
+	 *
+	 */
 
 	private static void processBoleia(Scanner in, MainInteraction mi1) {
 
@@ -483,6 +516,8 @@ public class Main {
 			Iterator itUsers = mi1.iteratorUsers();
 
 			boolean userFound = false;
+			
+			boolean stop = false;
 			
 			while(itUsers.hasNext() && !userFound) {
 				User currentUser = itUsers.nextUser();
@@ -531,11 +566,12 @@ public class Main {
 						}
 						else if(currentUser.getEmail().equals(email) && tripDate.equals(date)){
 							System.out.println(mi1.user[loggedUser].getName() + " nao existe lugar. Boleia nao registada.");
+							stop = true;
 							break;
 						}
 					}
 				}
-				else if(!itUsers.hasNext()) {
+				else if(!itUsers.hasNext() && !stop) {
 					System.out.println("Deslocacao nao existe.");
 				}
 			}
@@ -544,7 +580,14 @@ public class Main {
 			unknownCommand();
 	}
 
-	/** Retira uma dada deslocacao: */
+
+	/** 
+	 * Removes a certain trip from the logged in user: 
+	 * 
+	 * @param in
+	 * @param mi1
+	 * 
+	 */
 
 	private static void processRemove(Scanner in, MainInteraction mi1) {
 
@@ -560,15 +603,23 @@ public class Main {
 					Iterator itUserTrips = mi1.iteratorUserTrips(user);
 
 					itUserTrips.reinitialize();
+					
+					/**
+					 * @pre: itUserTrips.hasNext();
+					 */
 
 					while (itUserTrips.hasNext()) {
 						InfoTrip currentTrip = itUserTrips.nextTrip();
 						String tripDate = mi1.convertBasicDate(currentTrip.getDate());
 						if (tripDate.equals(mi1.convertBasicDate(date)) && currentTrip.getOccupiedSeats() == 0) {
+							
 							mi1.deleteTrip(date, user);
 							System.out.println("Deslocacao removida.");
 							break;
-						} else {
+							
+						}
+						
+						else if(tripDate.equals(mi1.convertBasicDate(date)) && currentTrip.getOccupiedSeats() > 0) {
 							System.out.println(user.getName() + " ja nao pode eliminar esta deslocacao.");
 							break;
 						}
@@ -581,6 +632,14 @@ public class Main {
 		} else
 			unknownCommand();
 	}
+	
+	/** 
+	 * Read the option selected by the user
+	 * 
+	 * @param in
+	 * @param mi1
+	 * 
+	 */
 
 	private static String readOption(Scanner in, MainInteraction mi1) {
 
@@ -590,6 +649,8 @@ public class Main {
 
 		return opt;
 	}
+	
+	/** Interprets the selected option and processes it */
 
 	private static void executeOption(String opt, MainInteraction mi1, Scanner in) {
 		if (!isSessionActive()) {
@@ -615,7 +676,10 @@ public class Main {
 				in.nextLine();
 				break;
 			}
-		} else {
+			
+		} 
+		
+		else {
 			switch (opt) {
 			case AJUDA:
 				processAjuda(mi1);
@@ -652,6 +716,8 @@ public class Main {
 			}
 		}
 	}
+	
+	/** Main method, initiates the input scanner and allows for user interaction */
 
 	public static void main(String[] args) {
 
@@ -662,6 +728,10 @@ public class Main {
 		MainInteraction mi1 = new MainInteraction();
 
 		String opt = "";
+		
+		/**
+		 * @pre: !processTermina();
+		 */
 
 		do {
 			opt = readOption(in, mi1);
@@ -670,6 +740,7 @@ public class Main {
 		} while (!termina);
 
 		in.close();
+		return;
 	}
 
 }
